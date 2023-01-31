@@ -3,7 +3,8 @@
 #include <iostream>
 #include <stdlib.h> 
 #include <time.h>
-
+#define WIDTH 1980
+#define HEIGHT 1024
 
 
 void randomParticles(std::vector<Particle*> *b, int n, sf::Vector2i screen) {
@@ -12,7 +13,7 @@ void randomParticles(std::vector<Particle*> *b, int n, sf::Vector2i screen) {
         sf::Color color(rand() % 255, rand() % 255, rand() % 255);
 
         //Particle *particle = new Particle(800, 600, 10, 10, 0, 0, sf::Color::Red);
-        Particle *particle = new Particle((int)rand()%screen.x, (int)rand()%screen.y, mass, 10, rand()%2-1, rand()%2-1, color);
+        Particle *particle = new Particle((int)rand()%screen.x, (int)rand()%screen.y, mass, 10, rand()%2-1, rand()%2-1, color, WIDTH, HEIGHT);
         b->push_back(particle);
     }
 }
@@ -22,14 +23,14 @@ int main()
     float zoom = 1.0f;
     bool moving;
     sf::Vector2f oldPos;
-    sf::RenderWindow window(sf::VideoMode(1980, 1024), "Devoided");
+    sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "Gravity Simulation");
     window.setFramerateLimit(360);
     // Particle sun(890, 512, 1000, 10, 0, 0, sf::Color::Yellow);
     // Particle blue(790, 512, 10, 10,0, 1, sf::Color::Blue);
     // Particle red(990, 600, 10, 10, 0, -1, sf::Color::Red);
     // std::vector<Particle*> bodies = {&blue, &red, &sun};
     std::vector<Particle*> bodies;
-    randomParticles(&bodies, 200, sf::Vector2i(1980, 1024));
+    randomParticles(&bodies, 100, sf::Vector2i(WIDTH, HEIGHT));
     while (window.isOpen())
     {
         sf::Event event;

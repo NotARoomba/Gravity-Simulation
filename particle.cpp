@@ -5,6 +5,7 @@
 const double G = 6.67e-1;
 class Particle {
 	sf::Vector2f pos;
+    sf::Vector2i bounds;
     float mass; 
     float radius; 
     float vX, vY;
@@ -13,7 +14,7 @@ class Particle {
 
 
     public:
-    	Particle(float pos_x, float pos_y, float mass, float radius, float velX, float velY, sf::Color color) {
+    	Particle(float pos_x, float pos_y, float mass, float radius, float velX, float velY, sf::Color color, int sw, int sh) {
         this->pos.x = pos_x;
         this->pos.y = pos_y;
         this->mass = mass;
@@ -21,6 +22,8 @@ class Particle {
         this->vY = velY;
         this->radius = radius;
         this->color = color;
+        this->bounds.x = sw;
+        this->bounds.y = sh;
         s.setPosition(pos);
         s.setFillColor(color);
         s.setRadius(radius);
@@ -83,12 +86,24 @@ class Particle {
 	    		// float nY = id * dY;
 	    		// float acX = nX * p.getMass() * isd;
 	    		// float acY = nY * p.getMass() * isd;float dX = p.getPos().x - pos.x;
-
+                if (pos.x < 0 || pos.y < bounds.x) {
+                    vX *= -1;
+                    acX *= -1;
+                    pos.x += vX;
+                }
+                if (pos.y > 0 || pos.y > bounds.y) {
+                    vY *= -1;
+                    acY *= -1;
+                    pos.y += vY;
+                }
                     
                 if (collision(p, *this, sf::Vector2f(acX, acY))) {
 	    		//if ((dX * dX) + (dY * dY) >= (p.getRadius() + getRadius()) ) {
-                    vX += acX;
-                    vY += acY;
+                    vX -= acX;
+                    vY -= acY;
+                    // vX = 0;
+                    // vY = 0;
+                    mass+=2;
                     //std::cout << pos.x << "\n";
                     pos.x += vX;
                     pos.y += vY;
