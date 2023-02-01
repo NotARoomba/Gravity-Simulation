@@ -24,10 +24,11 @@ int main()
     bool moving;
     sf::Vector2f oldPos;
     sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "Gravity Simulation");
-    window.setFramerateLimit(360);
-    // Particle sun(890, 512, 1000, 10, 0, 0, sf::Color::Yellow);
-    // Particle blue(790, 512, 10, 10,0, 1, sf::Color::Blue);
-    // Particle red(990, 600, 10, 10, 0, -1, sf::Color::Red);
+   
+    window.setFramerateLimit(60);
+    // Particle sun(890, 512, 10000, 10, 0, 0, sf::Color::Yellow, WIDTH, HEIGHT);
+    // Particle blue(790, 512, 10, 10,0, 1, sf::Color::Blue, WIDTH, HEIGHT);
+    // Particle red(990, 600, 10, 10, 0, -1, sf::Color::Red, WIDTH, HEIGHT);
     // std::vector<Particle*> bodies = {&blue, &red, &sun};
     std::vector<Particle*> bodies;
     randomParticles(&bodies, 100, sf::Vector2i(WIDTH, HEIGHT));
