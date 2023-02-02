@@ -86,16 +86,16 @@ class Particle {
 	    		// float nY = id * dY;
 	    		// float acX = nX * p.getMass() * isd;
 	    		// float acY = nY * p.getMass() * isd;float dX = p.getPos().x - pos.x;
-                if (pos.x < 0 || pos.x > bounds.x) {
-                    vX *= -1;
-                    acX *= -1;
-                    pos.x += vX;
-                }
-                if (pos.y < 0 || pos.y > bounds.y) {
-                    vY *= -1;
-                    acY *= -1;
-                    pos.y += vY;
-                }
+                // if (pos.x < 0 || pos.x > bounds.x) {
+                //     vX *= -1;
+                //     acX *= -1;
+                //     pos.x += vX;
+                // }
+                // if (pos.y < 0 || pos.y > bounds.y) {
+                //     vY *= -1;
+                //     acY *= -1;
+                //     pos.y += vY;
+                // }
                     
                 if (collision(p, *this, sf::Vector2f(acX, acY))) {
 	    		//if ((dX * dX) + (dY * dY) >= (p.getRadius() + getRadius()) ) {
@@ -104,7 +104,6 @@ class Particle {
                     vY += acY;
                     // vX = 0;
                     // vY = 0;
-                    //std::cout << pos.x << "\n";
                     pos.x += vX;
                     pos.y += vY;
 	    		 } 
@@ -112,13 +111,13 @@ class Particle {
                     vX-=acX;
                     vY-=acY;
                     p->pos.x+=acX;
-                    p->pos.y+=acY;
+                    p->pos.y+=acY ;
                     pos.x += vX;
                     pos.y += vY;
                 }
 
-                    vX = vY = 0; //TEST
-                    acX = acY = 0;
+                    // vX = vY = 0; //TEST
+                    // acX = acY = 0;
     		}
     	}
     }
