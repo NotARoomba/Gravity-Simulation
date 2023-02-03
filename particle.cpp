@@ -115,8 +115,7 @@ class Particle {
                     // vY = 0;
                     pos.x += vX;
                     pos.y += vY;
-	    		 } 
-                 else {
+	    		 } else {
                     vX-=acX;
                     vY-=acY;
                     p->pos.x+=acX;
