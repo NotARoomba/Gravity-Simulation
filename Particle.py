@@ -20,7 +20,7 @@ class Particle:
         #     self.vel[0] *= -1
         # if (0 > (self.pos[1] + (self.vel[1]*time)) or (self.pos[0] + (self.vel[0]*time)) > size[1]):
         #     self.vel[1] *= -1
-        self.points.append(self.pos)
+        self.points.append(self.pos.tolist())
         self.pos += self.vel * time 
     def forceFrom(self, other):
         delta = math.sqrt(((self.pos[0] - other.pos[0])**2 ) + ((self.pos[1] - other.pos[1])**2))
@@ -34,9 +34,9 @@ class Particle:
         angle = math.atan2(dy, dx)
         return np.array([force * math.cos(angle), force * math.sin(angle)]) * np.array([-1, -1])
     def draw(self, screen):
+        if (len(self.points) >= 2):
+            pygame.draw.aalines(screen, [self.color[0], self.color[1], self.color[2], 50], False, self.points)
         pygame.draw.circle(screen, self.color, self.pos, self.radius)
-        # for i in range(len(self.points)):
-        #     pygame.draw.circle(screen, self.color, [int(self.points[i][0]), int(self.points[i][1])], 1)
     def __str__(self):
         return str([self.pos, self.vel, self.color, self.mass])
     def __repr__(self):
