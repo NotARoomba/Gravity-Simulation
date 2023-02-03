@@ -1,4 +1,8 @@
 #include <SFML/Graphics.hpp>
+#include <SFML/Graphics/Drawable.hpp>
+#include <SFML/Graphics/PrimitiveType.hpp>
+#include <SFML/Graphics/Vertex.hpp>
+#include <SFML/System/Vector2.hpp>
 #include <math.h>
 #include <algorithm>
 #include <iostream>
@@ -11,6 +15,7 @@ class Particle {
     float vX, vY;
     sf::Color color;
     sf::CircleShape s;
+    sf::VertexArray points;
 
 
     public:
@@ -24,13 +29,15 @@ class Particle {
         this->color = color;
         this->bounds.x = sw;
         this->bounds.y = sh;
+        this->points = sf::VertexArray(sf::Lines, 100);
         s.setPosition(pos);
         s.setFillColor(color);
         s.setRadius(radius);
     }
     void render(sf::RenderWindow& w)
-    {
+    {   
         s.setPosition(pos);
+        w.draw(points);
         w.draw(s);
     }
 
@@ -96,7 +103,9 @@ class Particle {
                 //     acY *= -1;
                 //     pos.y += vY;
                 // }
-                    
+                points.append(sf::Vertex(sf::Vector2f(pos.x+radius, pos.y+radius), color));
+                //points.resize(points.getVertexCount()+1);
+                
                 if (collision(p, *this, sf::Vector2f(acX, acY))) {
 	    		//if ((dX * dX) + (dY * dY) >= (p.getRadius() + getRadius()) ) {
                     //change sign to repel
