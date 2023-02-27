@@ -21,8 +21,8 @@ class Universe:
                     forces[i] += self.particles[i].forceFrom(self.particles[j])
         for i in range(len(self.particles)):
             self.particles[i].move(forces[i], dt, self.size)
-    def draw(self, screen, clear, cameraPos, zoom):
+    def draw(self, screen, clear, cameraPos):
         for particle in self.particles:
             if clear:
                 particle.clearPoints()
-            particle.draw(screen, cameraPos, zoom)
+            particle.draw(screen, cameraPos)

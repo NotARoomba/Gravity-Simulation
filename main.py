@@ -1,6 +1,7 @@
 import Particle
 import Universe
 import sys, pygame
+import numpy as np
 size = width, height = 1200, 900
 
 def main():
@@ -9,14 +10,14 @@ def main():
     screen = pygame.display.set_mode(size, pygame.RESIZABLE)
     zoom = 1.0
     cameraPos = [0, 0]
-    bodies = Universe.genBodies(50, size)
+    # bodies = Universe.genBodies(50, size)
     # universe = Universe.Universe(bodies, size)
-    yellow = Particle.Particle([600, 450], [0, 0], 100000, 10, [255, 255, 0])
-    red = Particle.Particle([650, 550], [1, 0], 1000, 10, [255, 0, 0])
-    blue = Particle.Particle([550, 350], [-1, 0], 1000, 10, [0, 0, 255])
-    green = Particle.Particle([550, 650], [-0.5, 0], 1000, 10, [29, 227, 11])
-    purple = Particle.Particle([350, 550], [0, 0.5], 1000, 10, [148, 11, 227])
-    universe = Universe.Universe([yellow, red, blue, green, purple], size)
+    yellow = Particle.Particle([600, 450], [0, 0], 1000, 10, [255, 255, 0])
+    red = Particle.Particle([650, 550], [0, 0], 1000, 10, [255, 0, 0])
+    blue = Particle.Particle([550, 350], [0, 0], 1000, 10, [0, 0, 255])
+    # green = Particle.Particle([550, 650], [0, 0], 1000, 10, [29, 227, 11])
+    # purple = Particle.Particle([350, 550], [0, 0], 1000, 10, [148, 11, 227])
+    universe = Universe.Universe([yellow, red, blue], size)
     clock = pygame.time.Clock()
     clear = False
     while True:
@@ -36,7 +37,7 @@ def main():
         universe.timeStep(clock.tick(60))
         screen.fill([0, 0, 0])
         #zoomed = pygame.Surface((int(screen.get_width() * zoom), int(screen.get_height() * zoom)))
-        universe.draw(screen, clear, cameraPos, zoom)
+        universe.draw(screen, clear, np.array(cameraPos))
         #zoomed = pygame.transform.smoothscale(zoomed, screen.get_size())
 
         #screen.blit(zoomed, (-int(pan_x * zoom), -int(pan_y * zoom)))

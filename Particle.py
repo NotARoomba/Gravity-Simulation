@@ -35,13 +35,11 @@ class Particle:
         l = math.sqrt(force[0]*force[0] + force[1]*force[1])
         force = [force[0]/l, force[1]/l]
         return force
-    def draw(self, screen, cameraPos, zoom):
-        npos = (-int(cameraPos[0] * zoom), -int(cameraPos[1] * zoom))
+    def draw(self, screen, cameraPos):
+        npos = (-int(cameraPos[0]), -int(cameraPos[1]))
         if (len(self.points) >= 2):
-            for i in range(len(self.points)):
-                self.points[i] = np.array(self.points[i]) + np.array([-int(cameraPos[0] * zoom), -int(cameraPos[1] * zoom)])
-            pygame.draw.aalines(screen, [self.color[0], self.color[1], self.color[2], 50], False, self.points)
-        pygame.draw.circle(screen, self.color, self.pos + np.array([-int(cameraPos[0] * zoom), -int(cameraPos[1] * zoom)]), self.radius)
+            pygame.draw.aalines(screen, [self.color[0], self.color[1], self.color[2], 50], False, (np.array(self.points)  + np.array([-int(cameraPos[0] ), -int(cameraPos[1] )])))
+        pygame.draw.circle(screen, self.color, self.pos + np.array([-int(cameraPos[0]), -int(cameraPos[1] )]), self.radius)
     def clearPoints(self):
         self.points = []
     def __str__(self):
