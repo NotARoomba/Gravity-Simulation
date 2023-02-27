@@ -12,12 +12,12 @@ def main():
     cameraPos = [0, 0]
     # bodies = Universe.genBodies(50, size)
     # universe = Universe.Universe(bodies, size)
-    yellow = Particle.Particle([600, 450], [0, 0], 1000, 10, [255, 255, 0])
-    red = Particle.Particle([650, 550], [0, 0], 1000, 10, [255, 0, 0])
-    blue = Particle.Particle([550, 350], [0, 0], 1000, 10, [0, 0, 255])
-    # green = Particle.Particle([550, 650], [0, 0], 1000, 10, [29, 227, 11])
-    # purple = Particle.Particle([350, 550], [0, 0], 1000, 10, [148, 11, 227])
-    universe = Universe.Universe([yellow, red, blue], size)
+    yellow = Particle.Particle([600, 450], [0, 0], 100000, 10, [255, 255, 0])
+    red = Particle.Particle([650, 550], [1, 0], 1000, 10, [255, 0, 0])
+    blue = Particle.Particle([550, 350], [-1, 0], 1000, 10, [0, 0, 255])
+    green = Particle.Particle([550, 650], [-0.5, 0], 1000, 10, [29, 227, 11])
+    purple = Particle.Particle([350, 550], [0, 0.5], 1000, 10, [148, 11, 227])
+    universe = Universe.Universe([yellow, red, blue, green, purple], size)
     clock = pygame.time.Clock()
     clear = False
     while True:
