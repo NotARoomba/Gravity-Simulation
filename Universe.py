@@ -7,7 +7,7 @@ def genBodies(num, size):
     random.seed(time.time)
     bodies = []
     for i in range(num):
-        bodies.append(Particle.Particle([random.randrange(size[0]), random.randrange(size[1])], [0, 0], random.randrange(1000), 10, [random.randrange(255), random.randrange(255), random.randrange(255)]))
+        bodies.append(Particle.Particle([random.randrange(size[0]), random.randrange(size[1])], [0, 0], random.randrange(100000)+1, 10, [random.randrange(255), random.randrange(255), random.randrange(255)]))
     return bodies
 
 class Universe:
@@ -21,6 +21,8 @@ class Universe:
                     forces[i] += self.particles[i].forceFrom(self.particles[j])
         for i in range(len(self.particles)):
             self.particles[i].move(forces[i], dt, self.size)
-    def draw(self, screen):
+    def draw(self, screen, clear):
         for particle in self.particles:
+            if clear:
+                particle.clearPoints()
             particle.draw(screen)
