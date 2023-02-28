@@ -20,6 +20,8 @@ class Particle:
         #     self.vel[0] *= -1
         # if (0 > (self.pos[1] + (self.vel[1]*time)) or (self.pos[0] + (self.vel[0]*time)) > size[1]):
         #     self.vel[1] *= -1
+        if len(self.points) >=150:
+            self.points.pop(0)
         self.points.append(self.pos.tolist())
         self.pos += self.vel * time 
     def forceFrom(self, other):

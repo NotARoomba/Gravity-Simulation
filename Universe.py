@@ -7,7 +7,10 @@ def genBodies(num, size):
     random.seed(time.time)
     bodies = []
     for i in range(num):
-        bodies.append(Particle.Particle([random.randrange(size[0]), random.randrange(size[1])], [0, 0], random.randrange(100000)+1, 10, [random.randrange(255), random.randrange(255), random.randrange(255)]))
+        mass = random.randrange(100000)+1
+        # radius = 10*mass*0.00002
+        radius = 10
+        bodies.append(Particle.Particle([random.randrange(size[0]), random.randrange(size[1])], [0, 0], mass, radius, [random.randrange(255), random.randrange(255), random.randrange(255)]))
     return bodies
 
 class Universe:
@@ -26,3 +29,10 @@ class Universe:
             if clear:
                 particle.clearPoints()
             particle.draw(screen, cameraPos)
+    def getCenter(self):
+        pos = [0, 0]
+        for i in self.particles:
+            pos[0]+=i.pos[0]
+            pos[1]+=i.pos[1]
+        return np.array(pos) / len(self.particles)
+
