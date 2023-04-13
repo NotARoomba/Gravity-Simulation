@@ -10,14 +10,14 @@ def main():
     screen = pygame.display.set_mode(size, pygame.RESIZABLE)
     zoom = 1.0
     cameraPos = np.array([0, 0])
-    bodies = Universe.genBodies(25, size)
-    universe = Universe.Universe(bodies, size)
-    # yellow = Particle.Particle([600, 450], [0, 0], 100000, 10, [255, 255, 0])
-    # red = Particle.Particle([650, 550], [0.01, 0], 100000, 10, [255, 0, 0])
-    # blue = Particle.Particle([550, 350], [-0.01, 0], 1000, 10, [0, 0, 255])
-    # green = Particle.Particle([550, 650], [-0.5, 0], 1000, 10, [29, 227, 11])
-    # purple = Particle.Particle([350, 550], [0, 0.5], 1000, 10, [148, 11, 227])
-    # universe = Universe.Universe([yellow, red, blue], size)
+    # bodies = Universe.genBodies(25, size)
+    # universe = Universe.Universe(bodies, size)
+    yellow = Particle.Particle([600, 450], [0, 0], 100000000000, 10, [255, 255, 0])
+    red = Particle.Particle([650, 550], [0.01, 0], 100, 10, [255, 0, 0])
+    blue = Particle.Particle([550, 350], [-0.01, 0], 1000, 10, [0, 0, 255])
+    green = Particle.Particle([550, 650], [-0.5, 0], 1000, 10, [29, 227, 11])
+    purple = Particle.Particle([350, 550], [0, 0.5], 1000, 10, [148, 11, 227])
+    universe = Universe.Universe([yellow, red, blue, green, purple], size)
     clock = pygame.time.Clock()
     clear = False
     while True:
