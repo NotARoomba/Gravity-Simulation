@@ -4,7 +4,7 @@ import time
 import Particle
 
 def genBodies(num, size):
-    random.seed(time.time)
+    random.seed(time.time())
     bodies = []
     for i in range(num):
         mass = random.randrange(100000)+1
