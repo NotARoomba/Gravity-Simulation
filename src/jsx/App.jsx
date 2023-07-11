@@ -1,9 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Graphics, Stage, useTick, Container } from '@pixi/react';
-import Universe from "./Universe";
-import Planet from "./Planet";
-import * as Physics from "../cpp/Physics"
+import {Universe, Planet, Vec2} from "physics"
 
 import '../css/App.scss'
 import { Color } from "pixi.js";
@@ -43,30 +41,34 @@ let universe = null;
 // }
 let planetColors = ["#264653", "2A9D8F", "#F4A261", "E76F51", "#277da1", "#43aa8b", "#E9C46A", "#f8961e", "f94144"]
 function SolarSystem(props) {
+  useEffect(() => {
+    let planet = new Planet(new Vec2(Math.random()*props.size[0], Math.random()*props.size[1]), new Vec2(Math.random()-0.5, Math.random()-0.5), 15, 12, new Color(planetColors[Math.floor(planetColors.length * Math.random())]).toHex())
+    console.log(planet.get_data())
+  }, [])
   const [render, setRender] = useState(0);
   useTick(delta => {
     //console.log("UPDATE")
     setRender(render+1);
-    universe.timeStep(delta)
-    // console.log(universe.planets[0].pos)
+    universe.time_step(delta)
   })
   if (universe == null ) {
     if (universe==null) universe = new Universe()
     if (props.random) {
       //universe.planets.push(new Planet([props.size[0]/2, props.size[1]/2], [0, 0], 15, 10000000, new Color("black")))
       for (let i = 0; i < props.randomCount; i++) {
-        universe.planets.push(new Planet([Math.random()*props.size[0], Math.random()*props.size[1]], [Math.random()-0.5, Math.random()-0.5], 15, 12, new Color(planetColors[Math.floor(planetColors.length * Math.random())])))
+        universe.add_planet(new Planet(new Vec2(Math.random()*props.size[0], Math.random()*props.size[1]), new Vec2(Math.random()-0.5, Math.random()-0.5), 15, 12, new Color(planetColors[Math.floor(planetColors.length * Math.random())]).toHex()).get_data())
       }
     }
-  } 
+  }
   let drawList = []
   let i = 0;
-  for (let p of universe.planets) {
+  for (let p of universe.get_planets()) {
     //console.log(p)
+    // p = p.get_data() 
     let c = p.color
     let r = p.radius
-    let x = p.pos[0]
-    let y = p.pos[1]
+    let x = p.pos.x
+    let y = p.pos.y
     const draw = useCallback((g) => {
       //console.log(planet)
       g.clear()
