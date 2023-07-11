@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
-    "build:rust": "cd src/physics && wasm-pack build",
+    "build": "vite build && npm run build:rust",
+    "build:rust": "cd src/physics && rustup run stable wasm-pack build",
     "lint": "eslint src --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
@@ -14,7 +14,7 @@
     "@pixi/react": "^7.1.0",
     "install": "^0.13.0",
     "npm": "^9.8.0",
-    "physics": "file:src/physics/pkg",
+    "physics-engine": "file:src/physics/pkg",
     "pixi.js": "^7.2.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
