@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build && npm run build:rust",
-    "build:rust": "cd src/physics && rustup run stable wasm-pack build",
+    "build:rust": "cd src/physics && rustup run stable wasm-pack build --release",
     "lint": "eslint src --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
