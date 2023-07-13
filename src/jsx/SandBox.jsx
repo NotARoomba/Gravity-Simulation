@@ -55,7 +55,8 @@ export function resetSimulation() {
   }
 }
 export function changePlanets(event) {
-  let {c, w} = {c: universe.get_planets().length, w: event.target.value};
+  let {c, w} = {c: universe.get_planets().length, w: parseInt(event.target.value)};
+  console.log(c, w, universe.get_planets())
   if (w >= c) {
     for (let i = 0; i < (w-c); i++) {
       universe.add_planet(new Planet([Math.random()*nP[0], Math.random()*nP[1]],[Math.random()-0.5, Math.random()-0.5], 15, universe.get_mass(), new Color(planetColors[Math.floor(planetColors.length * Math.random())]).toHex()).get_data())

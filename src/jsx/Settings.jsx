@@ -14,8 +14,8 @@ export default function Settings() {
         <input type="range" max={250} min={1} step={1} defaultValue={1} onChange={changeMass}/>
         <p className="right-range">250</p>
         <p className="slider-text">Number of Planets</p>
-        <p className="left-range">1</p>
-        <input type="range" max={250} min={1} step={1} defaultValue={1} onChange={changePlanets}/>
+        <p className="left-range">2</p>
+        <input type="range" max={250} min={2} step={1} defaultValue={1} onChange={changePlanets}/>
         <p className="right-range">250</p>
     </div>
     <button className="reset-button" onClick={resetSimulation}>RESET SIMULATION</button>
