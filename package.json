@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && npm run build:rust",
-    "build:rust": "cd src/physics && rustup run stable wasm-pack build --release",
+    "build": "npm run build:rust && vite build",
+    "build:rust": "cd src/physics && cargo build && rustup run stable wasm-pack build --release",
     "lint": "eslint src --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
