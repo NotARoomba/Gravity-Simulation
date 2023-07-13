@@ -89,18 +89,20 @@ body {
 hr {
   color:#E5E5E5;
   width: 75%;
+  margin-bottom: 10px;
 }
 .slider-text {
   font-size: 1.5vw;
   font-weight: 600;
   margin-bottom: 0;
+  margin-top: 0;
 }
 input[type=range] {
   height: 16px;
   -webkit-appearance: none;
   background-color: #121212;
   margin: 10px 0;
-  width: 75%;
+  width: 70%;
 }
 input[type=range]:focus {
   background-color: #121212;
@@ -194,12 +196,18 @@ input[type=range]:focus::-ms-fill-upper {
 
 .left-range, .right-range {
   display: inline-block;
-  width: 10px;
+  width: 30px;
   padding: 1px;
   text-align: center;
   color: #f8961e; 
 }
 .slider-settings > * {
   vertical-align: middle;
+}
+
+.reset-button {
+  color: #e5e5e5;
+  background-color: #2f2f2f;
+  border-radius: 8px;
 }
 

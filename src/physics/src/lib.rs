@@ -92,13 +92,14 @@ impl Planet {
 pub struct Universe {
     planets: Vec<Planet>,
     gravity: f64,
-    speed: i32,
+    speed: f32,
+    mass: i32,
 }
 #[wasm_bindgen]
 impl Universe  {
     #[wasm_bindgen(constructor)]
     pub fn new() -> Universe {
-        Universe {planets: Vec::new(), gravity: 6.67e-11, speed: 1}
+        Universe {planets: Vec::new(), gravity: 6.67e-11, speed: 1.0, mass: 12}
     }
     pub fn time_step(&mut self, dt: f64) {
         let mut forces: Vec<Vec2> = vec![Vec2::new(0.0, 0.0); self.planets.len()];
@@ -111,9 +112,15 @@ impl Universe  {
             self.planets[i].move_planet(forces[i], dt*self.speed as f64);
         } 
     }
+    pub fn reset(&mut self) {
+        *self = Universe::new();
+    }
     pub fn add_planet(&mut self, planet: JsValue) {
         let planet_t: Planet =  serde_wasm_bindgen::from_value(planet).unwrap();
         self.planets.push(planet_t);
+    }
+    pub fn remove_planet(&mut self) {
+        self.planets.pop();
     }
     pub fn get_planets(&self) -> JsValue {
         return serde_wasm_bindgen::to_value(&self.planets).unwrap();
@@ -124,11 +131,22 @@ impl Universe  {
     pub fn get_gravity(&self) -> f64 {
         return self.gravity;
     }
-    pub fn set_speed(&mut self, speed: i32) {
+    pub fn set_speed(&mut self, speed: f32) {
         self.speed = speed;
     }
-    pub fn get_speed(&self) -> i32 {
+    pub fn get_speed(&self) -> f32 {
         return self.speed;
+    }
+    pub fn set_mass(&mut self, mass: i32) {
+        self.mass = mass;
+        for n in &mut self.planets {
+            if n.mass < 100000 {
+                 n.mass = mass;
+            }
+        }
+    }
+    pub fn get_mass(&self) -> i32 {
+        return self.mass;
     }
 }
  
