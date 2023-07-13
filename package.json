@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "npm run build:rust && vite build",
+    "build": "npm run build:rust && vite build && cp ./404.html ./docs",
     "build:rust": "cd src/physics && cargo build && rustup run stable wasm-pack build --release",
     "lint": "eslint src --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
