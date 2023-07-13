@@ -23,7 +23,7 @@ export default function SandBox(props) {
     if (universe==null) universe = new Universe()
     if (props.random) {
       nP = [...props.size, props.randomCount];
-      //universe.add_planet(new Planet([props.size[0]/2, props.size[1]/2], [0, 0], 15, 100000000000000, new Color("black").toHex()).get_data())
+      //universe.add_planet(new Planet([props.size[0]/2, props.size[1]/2], [0, 0], 15, 100000000000000, new Color("grey").toHex()).get_data())
       for (let i = 0; i < props.randomCount; i++) {
         universe.add_planet(new Planet([Math.random()*props.size[0], Math.random()*props.size[1]],[Math.random()-0.5, Math.random()-0.5], 15, 12, new Color(planetColors[Math.floor(planetColors.length * Math.random())]).toHex()).get_data())
       }
@@ -49,7 +49,7 @@ export function changeMass(event) {
 }
 export function resetSimulation() {
   universe.reset();
-  //universe.add_planet(new Planet([nP[0]/2, nP[1]/2], [0, 0], 15, 100000000000000, new Color("black").toHex()).get_data())
+  //universe.add_planet(new Planet([nP[0]/2, nP[1]/2], [0, 0], 15, 100000000000000, new Color("grey").toHex()).get_data())
   for (let i = 0; i < nP[2]; i++) {
     universe.add_planet(new Planet([Math.random()*nP[0], Math.random()*nP[1]],[Math.random()-0.5, Math.random()-0.5], 15, 12, new Color(planetColors[Math.floor(planetColors.length * Math.random())]).toHex()).get_data())
   }
@@ -64,6 +64,12 @@ export function changePlanets(event) {
     for (let i = 0; i < (c-w); i++) {
       universe.remove_planet();
     }
+  }
+}
+export function changeGravity(event) {
+  if (universe != null) {
+    universe.set_power(event.target.value)
+    console.log(universe.get_power())
   }
 }
 SandBox.propTypes = {
