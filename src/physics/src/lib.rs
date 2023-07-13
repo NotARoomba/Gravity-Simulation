@@ -92,12 +92,13 @@ impl Planet {
 pub struct Universe {
     planets: Vec<Planet>,
     gravity: f64,
+    speed: i32,
 }
 #[wasm_bindgen]
 impl Universe  {
     #[wasm_bindgen(constructor)]
     pub fn new() -> Universe {
-        Universe {planets: Vec::new(), gravity: 6.67e-11}
+        Universe {planets: Vec::new(), gravity: 6.67e-11, speed: 1}
     }
     pub fn time_step(&mut self, dt: f64) {
         let mut forces: Vec<Vec2> = vec![Vec2::new(0.0, 0.0); self.planets.len()];
@@ -107,7 +108,7 @@ impl Universe  {
             }
         }
         for i in 0..self.planets.len() {
-            self.planets[i].move_planet(forces[i], dt);
+            self.planets[i].move_planet(forces[i], dt*self.speed as f64);
         } 
     }
     pub fn add_planet(&mut self, planet: JsValue) {
@@ -122,6 +123,12 @@ impl Universe  {
     }
     pub fn get_gravity(&self) -> f64 {
         return self.gravity;
+    }
+    pub fn set_speed(&mut self, speed: i32) {
+        self.speed = speed;
+    }
+    pub fn get_speed(&self) -> i32 {
+        return self.speed;
     }
 }
  
