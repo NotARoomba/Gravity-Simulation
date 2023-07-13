@@ -271,3 +271,22 @@ input[type=range]:focus::-ms-fill-upper {
   right: 0;
 
 }
+
+.links {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  bottom:0;
+  left:50%;
+  transform: translateX(-50%);
+}
+.link {
+  color: #E5E5E5;
+  height: min-content;
+  max-height: fit-content;
+  margin: 10px;
+}
+.links > p {
+  margin: 10px;
+}

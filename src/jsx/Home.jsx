@@ -16,6 +16,13 @@ export default function Home() {
           <h1 className='top-text'>Gravity Simulation</h1>
           <Link to='/play' className="button">Play</Link>
         </div>
+        <div className="links">
+          <Link className="link" onClick={() => window.location.href = "https://notaroomba.xyz"}>Website</Link>
+          <p>•</p>
+          <p>NotARoomba</p>
+          <p>•</p>
+          <Link className="link" onClick={() => window.location.href = "https://github.com/NotARoomba/Gravity-Simulation"}>GitHub</Link>
+        </div>
     </div>
   )
 }
