@@ -6,7 +6,7 @@ export default function Settings() {
     <hr></hr>
     <div className="slider-settings">
         <p className="slider-text">Simulation Speed</p>
-        <p className="left-range">-10</p>
+        <p className="left-range" id="red-too">-10</p>
         <input type="range" max={10} min={-10} step={0.1} defaultValue={1} onChange={changeSpeed}/>
         <p className="right-range">10</p>
         <p className="slider-text">Planet Mass</p>

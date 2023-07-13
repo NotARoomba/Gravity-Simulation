@@ -126,7 +126,7 @@ input[type=range]::-webkit-slider-thumb {
   height: 20px;
   width: 20px;
   border-radius: 15px;
-  background: #4D908E;
+  background: #E9C46A;
   cursor: pointer;
   -webkit-appearance: none;
   margin-top: -8px;
@@ -152,7 +152,7 @@ input[type=range]::-moz-range-thumb {
   height: 20px;
   width: 20px;
   border-radius: 15px;
-  background: #4D908E;
+  background: #E9C46A;
   cursor: pointer;
 }
 input[type=range]::-ms-track {
@@ -184,7 +184,7 @@ input[type=range]::-ms-thumb {
   height: 20px;
   width: 20px;
   border-radius: 15px;
-  background: #4D908E;
+  background: #E9C46A;
   cursor: pointer;
 }
 input[type=range]:focus::-ms-fill-lower {
@@ -199,7 +199,16 @@ input[type=range]:focus::-ms-fill-upper {
   width: 30px;
   padding: 1px;
   text-align: center;
-  color: #f8961e; 
+
+}
+.left-range {
+  color: #2A9D8F;
+}
+.right-range {
+  color: #E76F51; 
+}
+#red-too {
+  color: #E76F51;
 }
 .slider-settings > * {
   vertical-align: middle;

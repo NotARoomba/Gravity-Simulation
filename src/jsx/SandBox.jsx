@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState } from "react";
 import PropTypes from 'prop-types';
 import { useTick } from '@pixi/react';
 import { Color } from "pixi.js";
