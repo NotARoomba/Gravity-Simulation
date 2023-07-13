@@ -8,7 +8,7 @@ export default function Play() {
     const [width, height] = useWindowDimension();
     return (
         <div className="play-screen">
-        <Stage width={width*0.8} height={height} options={{ backgroundColor: 0x000 }} className="canvas-left">
+        <Stage width={width*0.98} height={height} options={{ backgroundColor: 0x000 }} className="canvas-left">
             <SandBox id="solar-system" random={true} randomCount={25} size={[window.innerWidth*0.85, window.innerHeight]}/>
         </Stage>
         <Settings/>
