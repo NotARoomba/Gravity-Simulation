@@ -2,7 +2,6 @@ import { useState } from "react";
 import PropTypes from 'prop-types';
 import { useTick } from '@pixi/react';
 import { Color } from "pixi.js";
-
 import {Universe, Planet} from "physics-engine"
 
 import Ball from "./Ball";
@@ -35,7 +34,7 @@ export default function SandBox(props) {
     drawList.push(<Ball key={i} planet={p} />)
     i++
   }
-  return drawList
+  return drawList;
 }
 export function changeSpeed(event) {
   if (universe != null) {
