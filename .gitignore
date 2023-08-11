@@ -2,3 +2,4 @@
 main.o
 particle.o
 physics
+node_modules
