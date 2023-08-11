@@ -1,5 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include "particle.cpp"
+#include <SFML/System/Vector2.hpp>
 #include <iostream>
 #include <stdlib.h> 
 #include <time.h>
@@ -9,7 +10,7 @@
 
 void randomParticles(std::vector<Particle*> *b, int n, sf::Vector2i screen) {
     for (int i = 0; i < n; i++) {
-        int mass = (int)rand()%1+1;
+        int mass = (int)rand()%1000+1;
         sf::Color color(rand() % 255, rand() % 255, rand() % 255);
 
         //Particle *particle = new Particle(800, 600, 10, 10, 0, 0, sf::Color::Red);
@@ -26,15 +27,15 @@ int main()
     sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "Gravity Simulation");
    
     window.setFramerateLimit(60);
-    Particle sun(890, 512, 200, 10, 0, 0, sf::Color::Yellow, WIDTH, HEIGHT);
-    Particle blue(790, 512, 200, 10,0, -1 , sf::Color::Blue, WIDTH, HEIGHT);
-    Particle red(990, 600, 200, 10, 0.5, -1, sf::Color::Red, WIDTH, HEIGHT);
-    //Particle redMoon(1000, 610, 0.001, 2, 0, -1, sf::Color::Green, WIDTH, HEIGHT);
-    //std::vector<Particle*> bodies = {&blue, &red, &sun, &redMoon};
-    std::vector<Particle*> bodies = {&blue, &red, &sun};
+    // Particle sun(890, 512, 200, 10, 0, 0, sf::Color::Yellow, WIDTH, HEIGHT);
+    // Particle blue(790, 512, 200, 10,0, -1 , sf::Color::Blue, WIDTH, HEIGHT);
+    // Particle red(990, 600, 200, 10, 0.5, -1, sf::Color::Red, WIDTH, HEIGHT);
+    // Particle redMoon(1000, 610, 1, 2, 0, -1, sf::Color::Green, WIDTH, HEIGHT);
+    // std::vector<Particle*> bodies = {&blue, &red, &sun, &redMoon};
+    //std::vector<Particle*> bodies = {&blue, &red, &sun};
 
-    // std::vector<Particle*> bodies;
-    // randomParticles(&bodies, 100, sf::Vector2i(WIDTH, HEIGHT));
+    std::vector<Particle*> bodies;
+    randomParticles(&bodies, 100, sf::Vector2i(WIDTH, HEIGHT));
     while (window.isOpen())
     {
         sf::Event event;
@@ -99,11 +100,16 @@ int main()
         //sun.doPhysicsStuff(bodies);
         //blue.doPhysicsStuff(bodies);
        // std::cout << "aa: " << (&bodies[1])->getPos().x << "\n";
-        for (Particle* p : bodies) {
-            //std::cout << "aa: " << p->getPos().x << "\n";
-            p->render(window);
-            p->doPhysicsStuff(bodies);
+       std::vector<sf::Vector2f> forces(bodies.size());
+        for (int i = 0; i < bodies.size(); i++) {
+            for (int j = 0; j < bodies.size(); j++) {
+                forces[i] += bodies[i]->doPhysicsStuff(bodies[j]);
+            }
         };
+        for (int i = 0; i < bodies.size(); i++) {
+            bodies[i]->move(forces[i]);
+            bodies[i]->render(window);
+        }
         window.display();
     }
 

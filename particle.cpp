@@ -67,7 +67,8 @@ class Particle {
         float d = sqrt((dX * dX) + (dY * dY));
         return ((p->getRadius() + t.getRadius()) <= d);
     }
-    void doPhysicsStuff(std::vector<Particle*> particles) {
+    sf::Vector2f doPhysicsStuff(std::vector<Particle*> particles) {
+        sf::Vector2f forces;
     	for (Particle* p : particles) {
     		if (this != p) {
                 float Fnet;
@@ -77,8 +78,10 @@ class Particle {
 	    		float dY = p->getPos().y - pos.y;
 	    		float d = sqrt((dX * dX) + (dY * dY));
 
+                //prevents infinite gravity
+                if (d == 0) continue;
                 //Determine the net gravitational force between the two 
-                Fnet = ((G * (getMass() * p->getMass())) / (d * d)); 
+                Fnet = ((G * (getMass() * p->getMass())) / ((d * d)+5)); 
                 //Determine the angle from a to b in 2-Dimensional space 
                 theta = atan2(dY, dX); 
                 //Determine the total acceleration 
@@ -106,44 +109,62 @@ class Particle {
                 points.append(sf::Vertex(sf::Vector2f(pos.x+radius, pos.y+radius), color));
                 //points.resize(points.getVertexCount()+1);
                 
-                if (collision(p, *this, sf::Vector2f(acX, acY))) {
-	    		//if ((dX * dX) + (dY * dY) >= (p.getRadius() + getRadius()) ) {
-                    //change sign to repel
-                    vX += acX;
-                    vY += acY;
-                    // vX = 0;
-                    // vY = 0;
-                    pos.x += vX;
-                    pos.y += vY;
-	    		 } else {
-                    vX-=acX;
-                    vY-=acY;
-                    p->pos.x+=acX;
-                    p->pos.y+=acY ;
-                    pos.x += vX;
-                    pos.y += vY;
-                }
-
+                // if (collision(p, *this, sf::Vector2f(acX, acY))) {
+	    		// //if ((dX * dX) + (dY * dY) >= (p.getRadius() + getRadius()) ) {
+                //     //change sign to repel
+                //     vX += acX;
+                //     vY += acY;
+                //     // vX = 0;
+                //     // vY = 0;
+                //     pos.x += vX;
+                //     pos.y += vY;
+	    		//  } 
+                //  else {
+                //     vX-=acX;
+                //     vY-=acY;
+                //     p->pos.x+=acX;
+                //     p->pos.y+=acY ;
+                //     pos.x += vX;
+                //     pos.y += vY;
+                // }
+                forces += {acX, acY};
                     // vX = vY = 0; //TEST
                     // acX = acY = 0;
     		}
     	}
+        return forces;
     }
-    void doPhysicsStuff(Particle p) {
-		if (p.getPos() != pos && p.getVel() != getVel()) {
-			float dX = p.getPos().x - pos.x;
-			float dY = p.getPos().y - pos.y;
-			float d = sqrt(pow(dX, 2) + pow(dY, 2));
-			float id = 1.0f / d;
-			float isd = id * id;
-			float nX = id * dX;
-			float nY = id * dY;
-			float acX = nX * p.getMass() * isd;
-			float acY = nY * p.getMass() * isd;
-			vX += acX;
-			vY += acY;
-			pos.x += vX;
-			pos.y += vY;
-		}
+    void move(sf::Vector2f force) {
+        float delta = sqrt(pow(force.x, 2) + pow(force.y, 2));
+
+        sf::Vector2f acceleration = (force/mass);
+        std::cout << force.x << " " << force.y << std::endl;
+
+        vX+=acceleration.x;
+        vY+=acceleration.y;
+
+        pos.x+=vX;
+        pos.y+=vY;
+        
+        //points.append(sf::Vertex(sf::Vector2f(pos.x+radius, pos.y+radius), color));
+    }
+    sf::Vector2f doPhysicsStuff(Particle* p) {
+        float delta = sqrt(pow(pos.x - p->pos.x, 2) + pow(pos.y - p->pos.y, 2));
+
+        if (delta == 0.0) return {0, 0};
+
+        float dx = pos.x - p->pos.x;
+        float dy = pos.y - p->pos.y;
+
+        float f = -1 * (G * mass * p->mass) * pow(delta, 2);
+
+        float angle = atan2(dy, dx);
+
+        sf::Vector2f force = {f * cos(angle), f * sin(angle)};
+
+        float l = sqrt((force.x * force.x) + (force.y * force.y));
+
+        force/=l;
+        return force;;
     }
 };
