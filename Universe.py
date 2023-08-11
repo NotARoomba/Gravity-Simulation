@@ -7,9 +7,9 @@ def genBodies(num, size):
     random.seed(time.time())
     bodies = []
     for i in range(num):
-        mass = random.randrange(100000)+1
+        mass = random.randrange(1000)+1
         # radius = 10*mass*0.00002
-        radius = 10
+        radius = random.randrange(10)+1
         bodies.append(Particle.Particle([random.randrange(size[0]), random.randrange(size[1])], [0, 0], mass, radius, [random.randrange(255), random.randrange(255), random.randrange(255)]))
     return bodies
 

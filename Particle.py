@@ -39,6 +39,8 @@ class Particle:
         return force
     def draw(self, screen, cameraPos):
         npos = (-int(cameraPos[0]), -int(cameraPos[1]))
+        if (len(self.points) >= 10):
+            self.points.pop(0)
         if (len(self.points) >= 2):
             pygame.draw.aalines(screen, [self.color[0], self.color[1], self.color[2], 50], False, (np.array(self.points)  + np.array([-int(cameraPos[0] ), -int(cameraPos[1] )])))
         pygame.draw.circle(screen, self.color, self.pos + np.array([-int(cameraPos[0]), -int(cameraPos[1] )]), self.radius)
