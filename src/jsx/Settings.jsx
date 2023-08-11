@@ -1,4 +1,4 @@
-import { changeGravity, changeSpeed, changeMass, resetSimulation, changePlanets } from "./SandBox"
+import { changeSpeed, changeMass, resetSimulation, changePlanets } from "./SandBox"
 
 export default function Settings() {
     let isOpen = false
@@ -27,6 +27,7 @@ export default function Settings() {
         <input type="range" max={250} min={2} step={1} defaultValue={1} onChange={changePlanets}/>
         <p className="right-range">250</p>
     </div>
+    <p>Use the mouse/scrollwheel to move/zoom!</p>
     <button className="reset-button" onClick={resetSimulation}>RESET SIMULATION</button>
     </div></div>)
 }
