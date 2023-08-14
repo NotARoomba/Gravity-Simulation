@@ -4,7 +4,7 @@ use core::ops;
 use std::vec;
 
 #[wasm_bindgen]
-#[derive(Serialize, Deserialize, Clone, Copy)]
+#[derive(Serialize, Deserialize, Clone, Copy, Default)]
 pub struct Vec2 {
     x: f64,
     y: f64
@@ -48,7 +48,7 @@ impl ops::Div<f64> for Vec2 {
 }
 
 #[wasm_bindgen]
-#[derive(Serialize, Deserialize, Clone)]
+#[derive(Serialize, Deserialize, Clone, Default)]
 pub struct Planet {
     pos: Vec2,
     vel: Vec2,
@@ -80,7 +80,7 @@ impl Planet {
 
         force/=l;
 
-        return force;
+        force        
     }
     pub fn move_planet(&mut self, force: Vec2, time: f64) {
         let delta: f64 = f64::sqrt(f64::powi(force.x, 2) + f64::powi(force.y, 2));
@@ -92,9 +92,47 @@ impl Planet {
         self.pos += self.vel * time;
     }
     pub fn get_data(&self) -> JsValue {
-        return serde_wasm_bindgen::to_value(&self).unwrap();
+        serde_wasm_bindgen::to_value(&self).unwrap()
     }
 }
+
+pub struct QuadTree {
+	mass: i32,
+	dimensions: Vec2,
+	center: Vec2,
+	center_of_mass: Vec2,
+	is_leaf: bool,
+	planets: Vec<Planet>,
+	children: Vec<QuadTree>,
+}
+impl QuadTree {
+	pub fn new(dimensions: Vec2, center: Vec2, quadrant: i32) -> QuadTree {
+		QuadTree {mass: 0, dimensions, center, quadrant, center_of_mass: Vec2::new(0.0, 0.0), is_leaf: true, planets: Vec::new(), children: Vec::new()}
+	}
+	pub fn add_planet(&mut self, planet: Planet) {
+		//first check how many planets are in the QuaTree
+		//then if there are no planets ad the planet and return
+		//if there is a planet make a leaf false and then add 4 children and then find out the correct child that the planet should go in
+		//check if is a leaf and if so just set the planet
+		if self.is_leaf && self.planets.len() == 0 {
+			self.mass += planet.mass;
+			self.center_of_mass = planet.pos;
+			self.planets.push(planet);
+			return;
+		} else {
+			self.is_leaf = false;
+			for i in  0..4 {
+				self.children.push(QuadTree::new(Vec2::new(self.dimensions.x/2.0, self.dimensions.y/2.0), Vec2::new(self.center.x + (i32::pow(-1, i+2) as f64 *(self.dimensions.x/4.0), self.center.y + (i32::pow(-1, i+2) as f64 * (self.dimensions.y/4))), i+1));
+			}
+			//need to call add planet in the right quadrant 
+		}
+		// determine quadrant
+		let quadrant: Vec2 = Vec2::new(if planet.pos.x <= 0.0 {-1.0} else {1.0}, if planet.pos.y <= 0.0 {-1.0} else {1.0});
+		
+	} 
+}
+
+
 #[wasm_bindgen]
 #[derive(Serialize, Deserialize)]
 pub struct Universe {
