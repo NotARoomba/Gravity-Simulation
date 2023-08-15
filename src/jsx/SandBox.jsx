@@ -25,7 +25,7 @@ export default function SandBox(props) {
       nP = [...props.size, props.randomCount];
       //universe.add_planet(new Planet([props.size[0]/2, props.size[1]/2], [0, 0], 15, 100000000000000, new Color("grey").toHex()).get_data())
       for (let i = 0; i < props.randomCount; i++) {
-        universe.add_planet(new Planet([Math.random()*props.size[0], Math.random()*props.size[1]],[Math.random()-0.5, Math.random()-0.5], 15, 6, new Color(planetColors[Math.floor(planetColors.length * Math.random())]).toHex()).get_data())
+        universe.add_planet(new Planet([Math.random()*props.size[0], Math.random()*props.size[1]],[Math.random()-0.5, Math.random()-0.5], 5, 12, new Color(planetColors[Math.floor(planetColors.length * Math.random())]).toHex()).get_data())
       }
     }
   }

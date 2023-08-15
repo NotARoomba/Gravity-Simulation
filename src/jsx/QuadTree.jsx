@@ -16,7 +16,7 @@ export default function QuadTree({quadTree}) {
                 }
             }
         }
-        for (let i = 0; i < quadTree.children.length; i++) {
+        if (quadTree.children) for (let i = 0; i < quadTree.children.length; i++) {
             drawQuadRect(quadTree.children[i]);
         }
       }, [quadTree]);
