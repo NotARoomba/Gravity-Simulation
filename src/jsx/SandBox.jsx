@@ -16,7 +16,7 @@ let planetColors = ["#264653", "2A9D8F", "#F4A261", "E76F51", "#277da1", "#43aa8
 export default function SandBox(props) {
   const [render, setRender] = useState(0);
   useTick(delta => {
-    setRender(render+1);
+    if (delta < 5) setRender(render+1);
     universe.time_step(delta)
   })
   if (universe == null ) {
@@ -25,7 +25,7 @@ export default function SandBox(props) {
       nP = [...props.size, props.randomCount];
       //universe.add_planet(new Planet([props.size[0]/2, props.size[1]/2], [0, 0], 15, 100000000000000, new Color("grey").toHex()).get_data())
       for (let i = 0; i < props.randomCount; i++) {
-        universe.add_planet(new Planet([Math.random()*props.size[0], Math.random()*props.size[1]],[Math.random()-0.5, Math.random()-0.5], 5, 12, new Color(planetColors[Math.floor(planetColors.length * Math.random())]).toHex()).get_data())
+        universe.add_planet(new Planet([Math.random()*props.size[0], Math.random()*props.size[1]],[Math.random()-0.5, Math.random()-0.5], 15, 12, new Color(planetColors[Math.floor(planetColors.length * Math.random())]).toHex()).get_data())
       }
     }
   }
