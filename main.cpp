@@ -1,9 +1,11 @@
 #include <SFML/Graphics.hpp>
-#include "particle.cpp"
+#include <SFML/Graphics/Color.hpp>
 #include <SFML/System/Vector2.hpp>
 #include <iostream>
 #include <stdlib.h> 
 #include <time.h>
+#include <vector>
+#include "QuadTree.cpp"
 #define WIDTH 1980
 #define HEIGHT 1024
 
@@ -36,6 +38,11 @@ int main()
 
     std::vector<Particle*> bodies;
     randomParticles(&bodies, 100, sf::Vector2i(WIDTH, HEIGHT));
+    QuadTreeNode quadTree({WIDTH, HEIGHT}, {WIDTH/2, HEIGHT/2});
+    for (Particle* p : bodies) {
+        quadTree.addPlanet(p);
+    }
+    std::cout << "Added Planets!" << std::endl;
     while (window.isOpen())
     {
         sf::Event event;
@@ -102,14 +109,19 @@ int main()
        // std::cout << "aa: " << (&bodies[1])->getPos().x << "\n";
        std::vector<sf::Vector2f> forces(bodies.size());
         for (int i = 0; i < bodies.size(); i++) {
-            for (int j = 0; j < bodies.size(); j++) {
-                forces[i] += bodies[i]->doPhysicsStuff(bodies[j]);
+            std::vector<QuadTreeNode> quads = quadTree.findQuads(0.7, bodies[i]);
+            //std::cout << quads.size() << std::endl;
+            for (int j = 0; j < quads.size(); j++) {
+                Particle* temp = new Particle(quads[j].center_of_mass.x, quads[j].center_of_mass.y, quads[j].mass, 1, 0.0f, 0.0f, sf::Color::Black, WIDTH, HEIGHT);
+                forces[i] += bodies[i]->doPhysicsStuff(temp);
             }
         };
         for (int i = 0; i < bodies.size(); i++) {
             bodies[i]->move(forces[i]);
             bodies[i]->render(window);
         }
+        quadTree.render(window, quadTree);
+        quadTree.rebuild(bodies);
         window.display();
     }
 

@@ -6,6 +6,7 @@
 #include <math.h>
 #include <algorithm>
 #include <iostream>
+
 const double G = 6.67e-1;
 class Particle {
 	sf::Vector2f pos;
@@ -138,7 +139,7 @@ class Particle {
         float delta = sqrt(pow(force.x, 2) + pow(force.y, 2));
 
         sf::Vector2f acceleration = (force/mass);
-        std::cout << force.x << " " << force.y << std::endl;
+        //std::cout << force.x << " " << force.y << std::endl;
 
         vX+=acceleration.x;
         vY+=acceleration.y;
@@ -150,7 +151,6 @@ class Particle {
     }
     sf::Vector2f doPhysicsStuff(Particle* p) {
         float delta = sqrt(pow(pos.x - p->pos.x, 2) + pow(pos.y - p->pos.y, 2));
-
         if (delta == 0.0) return {0, 0};
 
         float dx = pos.x - p->pos.x;
