@@ -146,7 +146,7 @@ impl QuadTreeNode {
     }
 
     fn add_planet(&mut self, planet: &Planet) {
-        self.mass += planet.mass as f64;
+        //self.mass += planet.mass as f64;
         // self.center_of_mass.x += ((planet.pos.x * planet.mass as f64) + (self.center_of_mass.x * self.mass))/(planet.mass+self.mass);
         // self.center_of_mass.y += ((planet.pos.y * planet.mass as f64) + (self.center_of_mass.y * self.mass))/(planet.mass+self.mass);
 
@@ -273,7 +273,7 @@ impl Universe  {
     }
     pub fn time_step(&mut self, dt: f64) {
         let mut forces: Vec<Vec2> = vec![Vec2::new(0.0, 0.0); self.planets.len()];
-        log::info!("{}", dt);
+        //log::info!("{}", dt);
         for i in 0..self.planets.len() {
             let quads = self.quad_tree.find_quads(0.7, &self.planets[i]);
             if quads.len() == 0 {continue};
@@ -285,7 +285,7 @@ impl Universe  {
         for i in 0..self.planets.len() {
             self.planets[i].move_planet(forces[i], dt * self.speed as f64);
         } 
-        if (dt*10000.0) as i32 %10>5 {self.quad_tree.rebuild(self.planets.clone());}
+        self.quad_tree.rebuild(self.planets.clone());
     }
     pub fn reset(&mut self) {
         *self = Universe::new(self.quad_tree.dimensions.x, self.quad_tree.dimensions.y);

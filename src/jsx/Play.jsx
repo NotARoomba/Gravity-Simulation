@@ -52,7 +52,7 @@ export default function Play() {
         <div className="flex m-0 justify-start">
         <Stage width={width} height={height} options={{ backgroundColor: 0x000 }} className={"xs:w-[70vw]"} onPointerDown={() => document.getElementById("root").style.cursor = "grab"} onPointerUp={() => document.getElementById("root").style.cursor = "auto"}>
             <Viewport width={width} height={height}>
-                <SandBox id="solar-system" random={true} randomCount={250} size={[width, height]}/>
+                <SandBox id="solar-system" random={true} randomCount={500} size={[width, height]}/>
             </Viewport>
         </Stage>
         {/* <Settings/> */}
