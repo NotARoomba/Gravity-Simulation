@@ -4,7 +4,6 @@ import { Viewport as PixiViewport } from "pixi-viewport";
 import SandBox from "./SandBox"
 import Settings from "./Settings"
 import { useWindowDimension } from "./useWindowDimension";
-import '../css/App.scss'
 
 
 
@@ -21,16 +20,16 @@ const Viewport = (props) => {
       const { width, height } = props;
       const { ticker } = props.app;
       const { events } = props.app.renderer;
-  
+
+      //throws error because of this.transform == null
       const viewport = new PixiViewport({
-        screenWidth: width,
-        screenHeight: height,
-        worldWidth: width,
-        worldHeight: height,
-        ticker: ticker,
-        events: events,
-      });
-  
+          screenWidth: width,
+          screenHeight: height,
+          worldWidth: width,
+          worldHeight: height,
+          ticker: ticker,
+          events: events,
+        });
       viewport
         .drag({pressDrag: true}).decelerate({friction: 0.95,              // percent to decelerate after movement
         bounce: 0.8,                 // percent to decelerate when past boundaries (only applicable when viewport.bounce() is active)
@@ -38,18 +37,25 @@ const Viewport = (props) => {
   
       return viewport
     },
+    willUnmount: (instance) => {
+      // workaround because the ticker is already destroyed by this point by the stage
+      instance.options.noTicker = true;
+      instance.options.events.domElement = document.createElement('Viewport');
+      instance.destroy({children: true})
+
+  }
   })
 
 export default function Play() {
     const [width, height] = useWindowDimension();
     return (
-        <div className="play-screen">
-        <Stage width={width*0.98} height={height} options={{ backgroundColor: 0x000 }} className={"canvas-left"} onPointerDown={() => document.getElementById("root").style.cursor = "grab"} onPointerUp={() => document.getElementById("root").style.cursor = "auto"}>
-            <Viewport width={window.innerWidth*0.85} height={window.innerHeight}>
-                <SandBox id="solar-system" random={true} randomCount={25} size={[window.innerWidth*0.85, window.innerHeight]}/>
+        <div className="flex m-0 justify-start">
+        <Stage width={width} height={height} options={{ backgroundColor: 0x000 }} className={"xs:w-[70vw]"} onPointerDown={() => document.getElementById("root").style.cursor = "grab"} onPointerUp={() => document.getElementById("root").style.cursor = "auto"}>
+            <Viewport width={width} height={height}>
+                <SandBox id="solar-system" random={true} randomCount={25} size={[width, height]}/>
             </Viewport>
         </Stage>
-        <Settings/>
+        {/* <Settings/> */}
         </div>
     )
 }

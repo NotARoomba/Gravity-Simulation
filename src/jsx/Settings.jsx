@@ -1,10 +1,15 @@
 import { changeSpeed, changeMass, resetSimulation, changePlanets } from "./SandBox"
+import { useState } from "react";
+import { AnimatePresence } from "framer-motion";
 
 export default function Settings() {
-    let isOpen = false
-    return (<div className={"entire-settings-closed"} id="settings-div">
+    const [isOpen, setIsOpen] = useState(true);
+    return (
+    <AnimatePresence>
+        {isOpen && (
+        <div className={!isOpen?"entire-settings-closed":"entire-settings-closed"} id="settings-div">
     <div className="settings-button-div">
-        <button className="settings-button" onClick={() => {isOpen=!isOpen;$("#settings-div")[0].className = (isOpen?"entire-settings-open":"entire-settings-closed"); $("#settings-img")[0].src = (isOpen?"/assets/x.svg":"/assets/settings.svg")}}><img id="settings-img" src={"/assets/settings.svg"}></img></button>
+        <button className="settings-button" onClick={() => setIsOpen(!isOpen)}><img id="settings-img" src={isOpen?"/assets/x.svg":"/assets/settings.svg"}></img></button>
     </div>
     <div className="settings">
     <p className="settings-title">Settings</p>
@@ -29,5 +34,5 @@ export default function Settings() {
     </div>
     <p>Use the mouse/scrollwheel to move/zoom!</p>
     <button className="reset-button" onClick={resetSimulation}>RESET SIMULATION</button>
-    </div></div>)
+    </div></div>)}</AnimatePresence>)
 }

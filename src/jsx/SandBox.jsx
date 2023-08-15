@@ -5,6 +5,7 @@ import { Color } from "pixi.js";
 import {Universe, Planet} from "physics-engine"
 
 import Ball from "./Ball";
+import QuadTree from "./QuadTree";
 
 
 let universe = null;
@@ -19,12 +20,12 @@ export default function SandBox(props) {
     universe.time_step(delta)
   })
   if (universe == null ) {
-    if (universe==null) universe = new Universe()
+    if (universe==null) universe = new Universe(props.size[0], props.size[1])
     if (props.random) {
       nP = [...props.size, props.randomCount];
       //universe.add_planet(new Planet([props.size[0]/2, props.size[1]/2], [0, 0], 15, 100000000000000, new Color("grey").toHex()).get_data())
       for (let i = 0; i < props.randomCount; i++) {
-        universe.add_planet(new Planet([Math.random()*props.size[0], Math.random()*props.size[1]],[Math.random()-0.5, Math.random()-0.5], 15, 12, new Color(planetColors[Math.floor(planetColors.length * Math.random())]).toHex()).get_data())
+        universe.add_planet(new Planet([Math.random()*props.size[0], Math.random()*props.size[1]],[Math.random()-0.5, Math.random()-0.5], 15, 6, new Color(planetColors[Math.floor(planetColors.length * Math.random())]).toHex()).get_data())
       }
     }
   }
@@ -34,6 +35,8 @@ export default function SandBox(props) {
     drawList.push(<Ball key={i} planet={p} />)
     i++
   }
+  //console.log(universe.get_quad_tree())
+  drawList.push(<QuadTree key={i} quadTree={universe.get_quad_tree()} />)
   return drawList;
 }
 export function changeSpeed(event) {
@@ -68,7 +71,7 @@ export function changePlanets(event) {
 export function changeGravity(event) {
   if (universe != null) {
     universe.set_power(event.target.value)
-    console.log(universe.get_power())
+    //console.log(universe.get_power())
   }
 }
 SandBox.propTypes = {

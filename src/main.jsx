@@ -4,6 +4,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Home from './jsx/Home.jsx'
 import Play from './jsx/Play.jsx'
 import Error from './jsx/Error.jsx';
+import './css/App.css'
 
 const router = createBrowserRouter([
   { path: "/", element: <Home/>, errorElement:<Error/>},
