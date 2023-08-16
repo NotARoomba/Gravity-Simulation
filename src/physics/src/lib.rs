@@ -146,19 +146,19 @@ impl QuadTreeNode {
     }
 
     fn add_planet(&mut self, planet: &Planet) {
-        //self.mass += planet.mass as f64;
-        // self.center_of_mass.x += ((planet.pos.x * planet.mass as f64) + (self.center_of_mass.x * self.mass))/(planet.mass+self.mass);
-        // self.center_of_mass.y += ((planet.pos.y * planet.mass as f64) + (self.center_of_mass.y * self.mass))/(planet.mass+self.mass);
-
         if self.children.is_none() {
             self.planets.push(planet.clone());
-            if self.planets.len() > 1 {
+            if self.planets.len() > 2 {
                 self.subdivide();
             }
         } else {
             let quadrant: usize = self.get_quadrant(planet.pos);
-            let child: &mut Box<QuadTreeNode> = &mut self.children.as_mut().unwrap()[quadrant];
-            child.add_planet(planet);
+            match &mut self.children {
+                Some(children) => {
+                    children[quadrant].add_planet(planet);
+                }
+                None => ()
+            }
         }
     }
 
@@ -205,14 +205,18 @@ impl QuadTreeNode {
                     self.mass += child.mass;
                     self.center_of_mass += child.center_of_mass * child.mass
                 }
+                self.center_of_mass /= self.mass
+            } else {
+                self.mass = 0.0;
+                self.center_of_mass = Vec2::new(0.0, 0.0);
             }
-            self.center_of_mass /= self.mass
         }
     }
     fn rebuild(&mut self, planets: Vec<Planet>) {
         let mut max = Vec2::new(f64::MIN, f64::MIN);
         let mut min = Vec2::new(f64::MAX, f64::MAX);
         *self = QuadTreeNode::new(self.dimensions, self.center);
+        //log::info!("REBUILD PLANETS: {:#?}", planets);
         for planet in planets {
             if planet.pos.x > max.x { max.x = planet.pos.x; }
             if planet.pos.x < min.x { min.x = planet.pos.x; }
@@ -224,21 +228,21 @@ impl QuadTreeNode {
         self.center = min+(self.dimensions/2.0);    
         self.update_center_of_mass();
     }
-    fn find_quads(&self, target: f64, planet: &Planet) -> Vec<QuadTreeNode> {
+    fn find_quads(&mut self, target: f64, pos: Vec2) -> Vec<QuadTreeNode> {
         let mut queue: VecDeque<&QuadTreeNode> = VecDeque::new();
         let mut values: Vec<QuadTreeNode> = Vec::new();
         queue.push_back(self);
 
         while let Some(node) = queue.pop_front() {
-            let distance: f64 = node.center_of_mass.distance_from(planet.pos);
-            let ratio: f64 = node.dimensions.x / distance; // Calculate the ratio
-
+            let distance: f64 = node.center_of_mass.distance_from(pos);
+            let ratio: f64 = (node.dimensions.x+node.dimensions.y) / 2.0 / distance; // Calculate the ratio
+            //log::info!("Planet Pos: {:#?}, Node COM: {:#?}", planet.pos, node.center_of_mass);
             if ratio < target {
                 values.push(node.clone());
             } else {
                 if let Some(children) = &node.children {
                     for child in children {
-                        queue.push_back(child);
+                        queue.push_front(child);
                     }
                 }
             }
@@ -273,9 +277,11 @@ impl Universe  {
     }
     pub fn time_step(&mut self, dt: f64) {
         let mut forces: Vec<Vec2> = vec![Vec2::new(0.0, 0.0); self.planets.len()];
-        //log::info!("{}", dt);
+        let q2 = self.quad_tree.find_quads(0.05, self.planets[0].pos);
+
+        log::info!("QUADS LEN: {}", q2.len());
         for i in 0..self.planets.len() {
-            let quads = self.quad_tree.find_quads(0.7, &self.planets[i]);
+            let quads = self.quad_tree.find_quads(0.05, self.planets[i].pos);
             if quads.len() == 0 {continue};
             for j in 0..quads.len() {
                 forces[i] += self.planets[i].clone().force_from(&quads[j], self.gravity, self.power);
@@ -294,7 +300,6 @@ impl Universe  {
         let planet_t: Planet =  serde_wasm_bindgen::from_value(planet).unwrap();
         self.planets.push(planet_t);        
         self.quad_tree.rebuild(self.planets.clone());
-
     }
     pub fn remove_planet(&mut self) {
         self.planets.pop();        
@@ -303,7 +308,8 @@ impl Universe  {
     }
     pub fn get_planets(&self) -> JsValue {
         //log::info!("{:#?}", self.planets);
-        serde_wasm_bindgen::to_value(&self.planets.clone()).unwrap()
+        let planets: Vec<Planet> = self.planets.clone();
+        serde_wasm_bindgen::to_value(&planets).unwrap()
     }
     pub fn set_gravity(&mut self, gravity: f64) {
         self.gravity = gravity;
@@ -333,7 +339,8 @@ impl Universe  {
         return self.mass;
     }
     pub fn get_quad_tree(&self) -> JsValue {
-        serde_wasm_bindgen::to_value(&self.quad_tree).unwrap()
+        let quad_tree: QuadTreeNode = self.quad_tree.clone();
+        serde_wasm_bindgen::to_value(&quad_tree).unwrap()
     }
 }
  

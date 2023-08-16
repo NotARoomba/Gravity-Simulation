@@ -10,7 +10,7 @@ export default function Home() {
   const [width, height] = useWindowDimension();
   return (
     <div>
-      <Stage width={width*0.95} height={height*0.9} options={{ backgroundColor: 0x000 }} className="canvas">
+      <Stage width={width} height={height} options={{ backgroundColor: 0x000 }} className="canvas">
         <SandBox id="solar-system" random={true} randomCount={25} size={[window.innerWidth*0.95, window.innerHeight*0.9]}/>
         </Stage>
         <div className="fixed -translate-x-1/2 -translate-y-1/3 left-1/2 top-1/3">

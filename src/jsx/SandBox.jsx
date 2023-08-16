@@ -35,8 +35,8 @@ export default function SandBox(props) {
     drawList.push(<Ball key={i} planet={p} />)
     i++
   }
-  //console.log(universe.get_quad_tree())
-  //drawList.push(<QuadTree key={i} quadTree={universe.get_quad_tree()} />)
+  console.log(universe.get_quad_tree())
+  drawList.push(<QuadTree key={i} quadTree={universe.get_quad_tree()} />)
   return drawList;
 }
 export function changeSpeed(event) {
