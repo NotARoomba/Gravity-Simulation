@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { useTick } from '@pixi/react';
 import { Color } from "pixi.js";
 import {Universe, Planet} from "physics-engine"
+import BatchGraphics from "./BatchGraphics";
 
 import Ball from "./Ball";
 import QuadTree from "./QuadTree";
@@ -25,19 +26,19 @@ export default function SandBox(props) {
       nP = [...props.size, props.randomCount];
       //universe.add_planet(new Planet([props.size[0]/2, props.size[1]/2], [0, 0], 15, 1000, new Color("grey").toHex()).get_data())
       for (let i = 0; i < props.randomCount; i++) {
-        universe.add_planet(new Planet([Math.random()*props.size[0], Math.random()*props.size[1]],[Math.random()-0.5, Math.random()-0.5], 10, 12, new Color(planetColors[Math.floor(planetColors.length * Math.random())]).toHex()).get_data())
+        universe.add_planet(new Planet([Math.random()*props.size[0], Math.random()*props.size[1]],[Math.random()-0.5, Math.random()-0.5], 10, 120, new Color(planetColors[Math.floor(planetColors.length * Math.random())]).toHex()).get_data())
       }
     }
   }
-  let drawList = []
-  let i = 0;
-  for (let p of universe.get_planets()) {
-    drawList.push(<Ball key={i} planet={p} />)
-    i++
-  }
+  // let drawList = []
+  // let i = 0;
+  // for (let p of universe.get_planets()) {
+  //   drawList.push(<Ball key={i} planet={p} />)
+  //   i++
+  // }
   //console.log(universe.get_quad_tree())
-  drawList.push(<QuadTree key={i} quadTree={universe.get_quad_tree()} />)
-  return drawList;
+  //drawList.push(<QuadTree key={i} quadTree={universe.get_quad_tree()} />)
+  return <BatchGraphics planets={universe.get_planets()} quadTree={null} />;
 }
 export function changeSpeed(event) {
   if (universe != null) {
