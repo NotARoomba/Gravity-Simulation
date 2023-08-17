@@ -1,4 +1,4 @@
-import { changeSpeed, changeMass, resetSimulation, changePlanets, changeTheta } from "./SandBox"
+import { changeGravity, changeSpeed, changeMass, resetSimulation, changePlanets, changeTheta } from "./SandBox"
 import { useState } from "react";
 import { AnimatePresence } from "framer-motion";
 
@@ -12,12 +12,12 @@ export default function Settings() {
     </div>
     <div className="bg-[#121212] w-full rounded-tr-none rounded-br-none rounded-[35px];">
     <p className="text-[4vw] font-bold m-2.5">Settings</p>
-    <hr className="text-neutral-200 w-9/12 mb-2.5;"></hr>
+    <hr className="text-neutral-200 w-9/12 mb-2.5 align-middle"></hr>
     <div className="align-middle">
-        {/* <p className="text-[max(1.5vw,1.5vh)] font-semibold my-0">Gravity (G*m1*m2)/(r^n)</p>
+        <p className="text-[max(1.5vw,1.5vh)] font-semibold my-0">Gravity (G*m1*m2)/(r^n)</p>
         <p className="inline-block w-[30px] text-center p-px" id="red-too">1</p>
         <input type="range" max={1000} min={1} step={1} defaultValue={2} onChange={changeGravity}/>
-        <p className="inline-block w-[30px] text-center p-px">1000</p> */}
+        <p className="inline-block w-[30px] text-center p-px">1000</p>
         <p className="text-[max(1.5vw,1.5vh)] font-semibold my-0">Simulation Speed</p>
         <p className="inline-block w-[30px] text-center p-px" id="red-too">-10</p>
         <input type="range" max={10} min={-10} step={0.1} defaultValue={1} onChange={changeSpeed}/>
@@ -38,4 +38,4 @@ export default function Settings() {
     <p>Use the mouse/scrollwheel to move/zoom!</p>
     <button className="text-neutral-200 bg-[#2f2f2f] text-[max(1vw,1vh)] mb-5 rounded-lg" onClick={resetSimulation}>RESET SIMULATION</button>
     </div></div></AnimatePresence>)
-};
+}

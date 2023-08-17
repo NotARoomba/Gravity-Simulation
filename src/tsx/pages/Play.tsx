@@ -5,7 +5,6 @@ import SandBox from "../objects/SandBox"
 import Settings from "../objects/Settings"
 import { useWindowDimension } from "../utils/useWindowDimension";
 import { useState } from 'react';
-import { Vec2 } from 'physics-engine/physics_engine';
 
 
 
@@ -51,11 +50,12 @@ const Viewport = (props: {width: number, height: number, children: any}) => {
 export default function Play() {
     const [width, height] = useWindowDimension();
     const [pointerDown, setPointerDown] = useState(false);
+    console.log(pointerDown)
     return (
         <div className="flex m-0 justify-start">
-        <Stage width={width} height={height} options={{ backgroundColor: 0x000 }} className={"xs:w-[70vw] " + (pointerDown ? "cursor-pointer" : "cursor-auto")} onPointerDown={() => setPointerDown(true)} onPointerUp={() => setPointerDown(false)}>
+        <Stage width={width} height={height} options={{ backgroundColor: 0x000 }} className={"xs:w-[70vw] " + (pointerDown ? "cursor-grabbing" : "cursor-pointer")} onPointerDown={() => setPointerDown(true)} onPointerUp={() => setPointerDown(false)}>
             <Viewport width={width} height={height}>
-                <SandBox random={true} randomCount={400} dimensions={new Vec2(width, height)}/>
+                <SandBox random={true} randomCount={400} width={width} height={height}/>
             </Viewport>
         </Stage>
         <Settings/>

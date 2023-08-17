@@ -6,7 +6,7 @@ import { BatchGraphicsProps, QuadTreeProps } from "./Types";
 export default function BatchGraphics({planets, quadTree}: BatchGraphicsProps) {
     const draw = useCallback((g: G) => {
         g.clear();
-        g.lineStyle(1);
+        //g.lineStyle(1);
         for (let i = 0; i < planets.length; i++) {
             g.beginFill(planets[i].color, 1);
             g.drawCircle(planets[i].pos.x, planets[i].pos.y, planets[i].radius);

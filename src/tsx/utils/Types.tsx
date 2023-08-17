@@ -1,11 +1,11 @@
-import { Vec2 } from "physics-engine/physics_engine";
+import { Vec2 } from "physics-engine";
 
 export interface SandboxProps {
     random: boolean;
-    dimensions: Vec2;
+    width: number;
+    height: number;
     randomCount: number;
 }
-
 export interface BatchGraphicsProps {
     planets: Array<PlanetProps>;
     quadTree: QuadTreeProps | null;
@@ -13,7 +13,8 @@ export interface BatchGraphicsProps {
 }
 
 export interface UniverseInfo {
-    dimensions: Vec2;
+    width: number;
+    height: number;    
     randomCount: number;
 }
 
