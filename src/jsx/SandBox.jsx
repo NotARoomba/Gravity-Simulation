@@ -5,10 +5,6 @@ import { Color } from "pixi.js";
 import {Universe, Planet} from "physics-engine"
 import BatchGraphics from "./BatchGraphics";
 
-import Ball from "./Ball";
-import QuadTree from "./QuadTree";
-
-
 let universe = null;
 let nP = []
 
@@ -17,7 +13,7 @@ let planetColors = ["#264653", "2A9D8F", "#F4A261", "E76F51", "#277da1", "#43aa8
 export default function SandBox(props) {
   const [render, setRender] = useState(0);
   useTick(delta => {
-    if (delta < 5) setRender(render+1);
+    setRender(render+1);
     universe.time_step(delta)
   })
   if (universe == null ) {
@@ -26,19 +22,11 @@ export default function SandBox(props) {
       nP = [...props.size, props.randomCount];
       //universe.add_planet(new Planet([props.size[0]/2, props.size[1]/2], [0, 0], 15, 1000, new Color("grey").toHex()).get_data())
       for (let i = 0; i < props.randomCount; i++) {
-        universe.add_planet(new Planet([Math.random()*props.size[0], Math.random()*props.size[1]],[Math.random()-0.5, Math.random()-0.5], 10, 120, new Color(planetColors[Math.floor(planetColors.length * Math.random())]).toHex()).get_data())
+        universe.add_planet(new Planet([Math.random()*props.size[0], Math.random()*props.size[1]],[Math.random()-0.5, Math.random()-0.5], 12, 12, new Color(planetColors[Math.floor(planetColors.length * Math.random())]).toHex()).get_data())
       }
     }
   }
-  // let drawList = []
-  // let i = 0;
-  // for (let p of universe.get_planets()) {
-  //   drawList.push(<Ball key={i} planet={p} />)
-  //   i++
-  // }
-  //console.log(universe.get_quad_tree())
-  //drawList.push(<QuadTree key={i} quadTree={universe.get_quad_tree()} />)
-  return <BatchGraphics planets={universe.get_planets()} quadTree={null} />;
+  return <BatchGraphics planets={universe.get_planets()} quadTree={universe.get_quad_tree()} />;
 }
 export function changeSpeed(event) {
   if (universe != null) {
@@ -54,14 +42,14 @@ export function resetSimulation() {
   universe.reset();
   //universe.add_planet(new Planet([nP[0]/2, nP[1]/2], [0, 0], 15, 100000000000000, new Color("grey").toHex()).get_data())
   for (let i = 0; i < nP[2]; i++) {
-    universe.add_planet(new Planet([Math.random()*nP[0], Math.random()*nP[1]],[Math.random()-0.5, Math.random()-0.5], 15, 12, new Color(planetColors[Math.floor(planetColors.length * Math.random())]).toHex()).get_data())
+    universe.add_planet(new Planet([Math.random()*nP[0], Math.random()*nP[1]],[Math.random()-0.5, Math.random()-0.5], 12, 12, new Color(planetColors[Math.floor(planetColors.length * Math.random())]).toHex()).get_data())
   }
 }
 export function changePlanets(event) {
   let {c, w} = {c: universe.get_planets().length, w: parseInt(event.target.value)};
   if (w >= c) {
     for (let i = 0; i < (w-c); i++) {
-      universe.add_planet(new Planet([Math.random()*nP[0], Math.random()*nP[1]],[Math.random()-0.5, Math.random()-0.5], 15, universe.get_mass(), new Color(planetColors[Math.floor(planetColors.length * Math.random())]).toHex()).get_data())
+      universe.add_planet(new Planet([Math.random()*nP[0], Math.random()*nP[1]],[Math.random()-0.5, Math.random()-0.5], 12, universe.get_mass(), new Color(planetColors[Math.floor(planetColors.length * Math.random())]).toHex()).get_data())
     }
   } else {
     for (let i = 0; i < (c-w); i++) {
@@ -72,6 +60,12 @@ export function changePlanets(event) {
 export function changeGravity(event) {
   if (universe != null) {
     universe.set_power(event.target.value)
+    //console.log(universe.get_power())
+  }
+}
+export function changeTheta(event) {
+  if (universe != null) {
+    universe.set_theta(event.target.value)
     //console.log(universe.get_power())
   }
 }

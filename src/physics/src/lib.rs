@@ -266,16 +266,17 @@ pub struct Universe {
     mass: f64,
     power: i32,
     quad_tree: QuadTreeNode,
+    theta: f64,
 }
 #[wasm_bindgen]
 impl Universe  {
     #[wasm_bindgen(constructor)]
     pub fn new(width: f64, height: f64) -> Universe {
-        panic::set_hook(Box::new(console_error_panic_hook::hook));
-        wasm_logger::init(wasm_logger::Config::default());
+        // panic::set_hook(Box::new(console_error_panic_hook::hook));
+        // wasm_logger::init(wasm_logger::Config::default());
         // log::info!("Universe Init!");
 
-        Universe {planets: Vec::new(), gravity: 6.67e-11, speed: 1.0, mass: 12.0, power: 2, quad_tree: QuadTreeNode::new(Vec2::new(width, height), Vec2::new(width/2.0, height/2.0))}
+        Universe {planets: Vec::new(), gravity: 6.67e-11, speed: 1.0, mass: 12.0, power: 2, quad_tree: QuadTreeNode::new(Vec2::new(width, height), Vec2::new(width/2.0, height/2.0)), theta: 0.5}
     }
     pub fn time_step(&mut self, dt: f64) {
         let mut forces: Vec<Vec2> = vec![Vec2::new(0.0, 0.0); self.planets.len()];
@@ -283,7 +284,7 @@ impl Universe  {
 
         // log::info!("QUADS LEN: {}", q2.len());
         for i in 0..self.planets.len() {
-            let quads = self.quad_tree.find_quads(0.7, self.planets[i].pos);
+            let quads = self.quad_tree.find_quads(self.theta, self.planets[i].pos);
             if quads.len() == 0 {continue};
             for j in 0..quads.len() {
                 forces[i] += self.planets[i].force_from(&quads[j], self.gravity, self.power);
@@ -343,6 +344,9 @@ impl Universe  {
     }
     pub fn get_quad_tree(&self) -> JsValue {
         serde_wasm_bindgen::to_value(&self.quad_tree).unwrap()
+    }
+    pub fn set_theta(&mut self, theta: f64) {
+        self.theta = theta;
     }
 }
  
