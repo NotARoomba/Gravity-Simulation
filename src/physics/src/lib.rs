@@ -6,7 +6,7 @@ extern crate console_error_panic_hook;
 use std::panic;
 
 #[wasm_bindgen]
-#[derive(Serialize, Deserialize, Clone, Copy, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Clone, PartialEq, Copy)]
 pub struct Vec2 {
     x: f64,
     y: f64
@@ -71,7 +71,7 @@ impl ops::Div<f64> for Vec2 {
 }
 
 #[wasm_bindgen]
-#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
+#[derive(Serialize, Deserialize, PartialEq, Clone)]
 pub struct Planet {
     pos: Vec2,
     vel: Vec2,
@@ -122,7 +122,7 @@ impl Planet {
 }
 
 #[wasm_bindgen]
-#[derive(Serialize, Deserialize, Debug, Clone)]
+#[derive(Serialize, Deserialize, Clone)]
 pub struct QuadTreeNode {
     mass: f64,
     center_of_mass: Vec2,
@@ -262,7 +262,7 @@ impl QuadTreeNode {
 pub struct Universe {
     planets: Vec<Planet>,
     gravity: f64,
-    speed: f32,
+    speed: f64,
     mass: f64,
     power: i32,
     quad_tree: QuadTreeNode,
@@ -271,12 +271,12 @@ pub struct Universe {
 #[wasm_bindgen]
 impl Universe  {
     #[wasm_bindgen(constructor)]
-    pub fn new(width: f64, height: f64) -> Universe {
+    pub fn new(dimensions: Vec2) -> Universe {
         // panic::set_hook(Box::new(console_error_panic_hook::hook));
         // wasm_logger::init(wasm_logger::Config::default());
         // log::info!("Universe Init!");
 
-        Universe {planets: Vec::new(), gravity: 6.67e-11, speed: 1.0, mass: 12.0, power: 2, quad_tree: QuadTreeNode::new(Vec2::new(width, height), Vec2::new(width/2.0, height/2.0)), theta: 0.5}
+        Universe {planets: Vec::new(), gravity: 6.67e-11, speed: 1.0, mass: 12.0, power: 2, quad_tree: QuadTreeNode::new(dimensions, dimensions/2.0), theta: 0.5}
     }
     pub fn time_step(&mut self, dt: f64) {
         let mut forces: Vec<Vec2> = vec![Vec2::new(0.0, 0.0); self.planets.len()];
@@ -298,7 +298,7 @@ impl Universe  {
         self.quad_tree.rebuild(&self.planets);
     }
     pub fn reset(&mut self) {
-        *self = Universe::new(self.quad_tree.dimensions.x, self.quad_tree.dimensions.y);
+        *self = Universe::new(self.quad_tree.dimensions);
     }
     pub fn add_planet(&mut self, planet: JsValue) {
         let planet_t: Planet =  serde_wasm_bindgen::from_value(planet).unwrap();
@@ -321,10 +321,10 @@ impl Universe  {
     pub fn get_gravity(&self) -> f64 {
         return self.gravity;
     }
-    pub fn set_speed(&mut self, speed: f32) {
+    pub fn set_speed(&mut self, speed: f64) {
         self.speed = speed;
     }
-    pub fn get_speed(&self) -> f32 {
+    pub fn get_speed(&self) -> f64 {
         return self.speed;
     }
     pub fn set_power(&mut self, power: i32) {

@@ -1,13 +1,15 @@
 import { useApp, PixiComponent, Stage } from '@pixi/react';
 import { EventSystem } from "@pixi/events";
 import { Viewport as PixiViewport } from "pixi-viewport";
-import SandBox from "./SandBox"
-import Settings from "./Settings"
-import { useWindowDimension } from "./useWindowDimension";
+import SandBox from "../objects/SandBox"
+import Settings from "../objects/Settings"
+import { useWindowDimension } from "../utils/useWindowDimension";
+import { useState } from 'react';
+import { Vec2 } from 'physics-engine/physics_engine';
 
 
 
-const Viewport = (props) => {
+const Viewport = (props: {width: number, height: number, children: any}) => {
     const app = useApp()
     return <PixiComponentViewport app={app} {...props} />
   }
@@ -48,11 +50,12 @@ const Viewport = (props) => {
 
 export default function Play() {
     const [width, height] = useWindowDimension();
+    const [pointerDown, setPointerDown] = useState(false);
     return (
         <div className="flex m-0 justify-start">
-        <Stage width={width} height={height} options={{ backgroundColor: 0x000 }} className={"xs:w-[70vw]"} onPointerDown={() => document.getElementById("root").style.cursor = "grab"} onPointerUp={() => document.getElementById("root").style.cursor = "auto"}>
+        <Stage width={width} height={height} options={{ backgroundColor: 0x000 }} className={"xs:w-[70vw] " + (pointerDown ? "cursor-pointer" : "cursor-auto")} onPointerDown={() => setPointerDown(true)} onPointerUp={() => setPointerDown(false)}>
             <Viewport width={width} height={height}>
-                <SandBox id="solar-system" random={true} randomCount={400} size={[width, height]}/>
+                <SandBox random={true} randomCount={400} dimensions={new Vec2(width, height)}/>
             </Viewport>
         </Stage>
         <Settings/>

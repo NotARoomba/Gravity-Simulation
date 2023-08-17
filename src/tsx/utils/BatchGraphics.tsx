@@ -1,9 +1,10 @@
 import {useCallback} from "react";
-import PropTypes from 'prop-types';
+import {Graphics as G} from 'pixi.js'
 import { Graphics } from "@pixi/react";
+import { BatchGraphicsProps, QuadTreeProps } from "./Types";
 
-export default function BatchGraphics({planets, quadTree}) {
-    const draw = useCallback((g) => {
+export default function BatchGraphics({planets, quadTree}: BatchGraphicsProps) {
+    const draw = useCallback((g: G) => {
         g.clear();
         g.lineStyle(1);
         for (let i = 0; i < planets.length; i++) {
@@ -14,7 +15,7 @@ export default function BatchGraphics({planets, quadTree}) {
         if (quadTree) {
             g.lineStyle(1, '#ffffff');
             g.drawRect(quadTree.center.x-quadTree.dimensions.x/2, quadTree.center.y-quadTree.dimensions.y/2, quadTree.dimensions.x, quadTree.dimensions.y);
-            const drawQuadRect = (qtt) => {
+            const drawQuadRect = (qtt: QuadTreeProps) => {
                 g.drawRect(qtt.center.x-qtt.dimensions.x/2, qtt.center.y-qtt.dimensions.y/2, qtt.dimensions.x, qtt.dimensions.y);
                 if (qtt.children) {
                     for (let i = 0; i < qtt.children.length; i++) {
@@ -30,9 +31,4 @@ export default function BatchGraphics({planets, quadTree}) {
     return (
         <Graphics draw={draw} />
     )
-}
-
-BatchGraphics.propTypes = {
-    planets: PropTypes.arrayOf(PropTypes.object),
-    quadTree: PropTypes.object
 }

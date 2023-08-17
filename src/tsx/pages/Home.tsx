@@ -1,8 +1,9 @@
 import { Link } from "react-router-dom";
 import { Stage } from "@pixi/react";
-import SandBox from "./SandBox"
-import Credits from "./Credits";
-import { useWindowDimension } from "./useWindowDimension";
+import SandBox from "../objects/SandBox"
+import Credits from "../objects/Credits";
+import { useWindowDimension } from "../utils/useWindowDimension";
+import { Vec2 } from "physics-engine/physics_engine";
 
 
 
@@ -11,7 +12,7 @@ export default function Home() {
   return (
     <div>
       <Stage width={width} height={height} options={{ backgroundColor: 0x000 }} className="canvas">
-        <SandBox id="solar-system" random={true} randomCount={150} size={[window.innerWidth*0.95, window.innerHeight*0.9]}/>
+        <SandBox random={true} randomCount={150} dimensions={new Vec2(width, height)}/>
         </Stage>
         <div className="fixed -translate-x-1/2 -translate-y-1/3 left-1/2 top-1/3">
           <h1 className='text-9xl font-semibold mb-12'>Gravity Simulation</h1>

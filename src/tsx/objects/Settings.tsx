@@ -38,4 +38,4 @@ export default function Settings() {
     <p>Use the mouse/scrollwheel to move/zoom!</p>
     <button className="text-neutral-200 bg-[#2f2f2f] text-[max(1vw,1vh)] mb-5 rounded-lg" onClick={resetSimulation}>RESET SIMULATION</button>
     </div></div></AnimatePresence>)
-}
+};
