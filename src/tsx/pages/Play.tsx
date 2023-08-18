@@ -8,7 +8,7 @@ import { useState } from 'react';
 
 
 
-const Viewport = (props: {width: number, height: number, children: any}) => {
+const Viewport = (props: {width: number, height: number, children: unknown}) => {
     const app = useApp()
     return <PixiComponentViewport app={app} {...props} />
   }
@@ -53,12 +53,11 @@ export default function Play() {
     const pointer = (value: boolean) => {
       setPointerDown(value)
     }
-    console.log(pointerDown)
     return (
         <div className="flex m-0 justify-start">
         <Stage width={width} height={height} options={{ backgroundColor: 0x000 }} className={"xs:w-[70vw] " + (pointerDown ? "cursor-grabbing" : "cursor-pointer")} onPointerDown={() => pointer(true)} onPointerUp={() => pointer(false)}>
             <Viewport width={width} height={height}>
-                <SandBox random={true} randomCount={25} width={width} height={height}/>
+                <SandBox random={true} randomCount={250} width={width} height={height}/>
             </Viewport>
         </Stage>
         <Settings/>
