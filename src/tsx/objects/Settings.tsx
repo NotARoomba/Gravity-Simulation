@@ -32,8 +32,8 @@ export default function Settings() {
         <p className="inline-block w-[30px] text-center p-px">2000</p>
         <p className="text-[max(1.5vw,1.5vh)] font-semibold my-0">Theta</p>
         <p className="inline-block w-[30px] text-center p-px">0.1</p>
-        <input type="range" max={2} min={0.1} step={0.1} defaultValue={0.5} onChange={changeTheta}/>
-        <p className="inline-block w-[30px] text-center p-px">2</p>
+        <input type="range" max={3} min={0.1} step={0.1} defaultValue={0.5} onChange={changeTheta}/>
+        <p className="inline-block w-[30px] text-center p-px">3</p>
     </div>
     <p>Use the mouse/scrollwheel to move/zoom!</p>
     <button className="text-neutral-200 bg-[#2f2f2f] text-[max(1vw,1vh)] mb-5 rounded-lg" onClick={resetSimulation}>RESET SIMULATION</button>
