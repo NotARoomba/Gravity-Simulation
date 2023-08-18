@@ -138,7 +138,7 @@ class Particle {
         float delta = sqrt(pow(force.x, 2) + pow(force.y, 2));
 
         sf::Vector2f acceleration = (force/mass);
-        std::cout << force.x << " " << force.y << std::endl;
+        //std::cout << force.x << " " << force.y << std::endl;
 
         vX+=acceleration.x;
         vY+=acceleration.y;
