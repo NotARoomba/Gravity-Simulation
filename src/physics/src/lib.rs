@@ -2,11 +2,11 @@ use wasm_bindgen::prelude::*;
 use serde::{Serialize, Deserialize};
 use core::ops;
 use std::{vec, collections::VecDeque};
-extern crate console_error_panic_hook;
-use std::panic;
+// extern crate console_error_panic_hook;
+// use std::panic;
 
 #[wasm_bindgen]
-#[derive(Serialize, Deserialize, Clone, PartialEq, Copy)]
+#[derive(Serialize, Deserialize, Clone, PartialEq, Copy, Debug)]
 pub struct Vec2 {
     pub x: f64,
     pub y: f64
@@ -82,10 +82,10 @@ pub struct Planet {
 #[wasm_bindgen]
 impl Planet {
     #[wasm_bindgen(constructor)]
-    pub fn new(px: f64, py: f64, dx: f64, dy: f64, radius: i32, mass: f64, color: String) -> Planet {
-        Planet {pos: Vec2::new(px, py), vel: Vec2::new(dx, dy), radius, mass, color}
+    pub fn new(px: f64, py: f64, vx: f64, vy: f64, radius: i32, mass: f64, color: String) -> Planet {
+        Planet {pos: Vec2::new(px, py), vel: Vec2::new(vx, vy), radius, mass, color}
     }
-    pub fn force_from(&self, other: &QuadTreeNode, gravity: f64, power: i32) -> Vec2 {
+    pub fn force_from_quad(&self, other: &QuadTreeNode, gravity: f64, power: i32) -> Vec2 {
         let delta: f64 = f64::sqrt(f64::powi(self.pos.x - other.center_of_mass.x, 2) + f64::powi(self.pos.y - other.center_of_mass.y, 2));
         //log::info!("{:#?}", other);
 
@@ -106,9 +106,31 @@ impl Planet {
 
         force        
     }
+    pub fn force_from_planet(&self, other: &Planet, gravity: f64, power: i32) -> Vec2 {
+        let delta: f64 = f64::sqrt(f64::powi(self.pos.x - other.pos.x, 2) + f64::powi(self.pos.y - other.pos.y, 2));
+        //log::info!("{:#?}", other);
+
+        if delta == 0.0 { return Vec2::new(0.0, 0.0) };
+
+        let dx: f64 = self.pos.x - other.pos.x;
+        let dy: f64 = self.pos.y - other.pos.y;
+
+        let f: f64 = -1.0 * (gravity * self.mass as f64 * other.mass as f64) * f64::powi(delta, power);
+
+        let angle: f64 = f64::atan2(dy, dx);
+
+        let mut force: Vec2 = Vec2::new(f * f64::cos(angle), f * f64::sin(angle));
+
+        let l: f64 = f64::sqrt((force.x * force.x) + (force.y * force.y));
+
+        force/=l;
+
+        force        
+    }
     pub fn move_planet(&mut self, force: Vec2, time: f64) {
         let delta: f64 = f64::sqrt(f64::powi(force.x, 2) + f64::powi(force.y, 2));
-        if delta == 0.0 { return };
+        
+        if delta == 0.0 { return log::info!("Delta: {:#?}, force: {:#?}", delta, force) };
 
         let acceleration: Vec2 = (force/self.mass as f64)/delta;
 
@@ -129,7 +151,7 @@ pub struct QuadTreeNode {
     dimensions: Vec2,
     center: Vec2,
     children: Option<[Box<QuadTreeNode>; 4]>,
-    planet: Planet,
+    planets: Vec<Planet>,
 }
 
 // Implement methods for the QuadTreeNode
@@ -142,32 +164,28 @@ impl QuadTreeNode {
             dimensions,
             center,
             children: None,
-            planet: Planet { pos: Vec2::new(0.0, 0.0), vel: Vec2::new(0.0, 0.0), radius: 0, mass: 0.0, color: "#000000".to_string() },
+            planets: Vec::new(),
         }
     }
 
-    fn has_planet(&self) -> bool {
-        self.planet.mass != 0.0 && self.planet.radius != 0
-    }
-
-    fn add_planet(&mut self, new_planet: &Planet) {
+    fn add_planet(&mut self, planet: &Planet) {
         if self.children.is_none() {
-            if !self.has_planet() {self.planet = new_planet.clone();}
-            else {
-                self.subdivide(new_planet);
+            self.planets.push(planet.clone());
+            if self.planets.len() > 1 {
+                self.subdivide();
             }
         } else {
-            let quadrant: usize = self.get_quadrant(&new_planet.pos);
+            let quadrant: usize = self.get_quadrant(&planet.pos);
             match &mut self.children {
                 Some(children) => {
-                    children[quadrant].add_planet(new_planet);
+                    children[quadrant].add_planet(planet);
                 }
                 None => ()
             }
         }
     }
 
-    fn subdivide(&mut self, new_planet: &Planet) {
+    fn subdivide(&mut self) {
         let new_dimensions: Vec2 = Vec2::new(self.dimensions.x / 2.0, self.dimensions.y / 2.0);
         let child_centers: [Vec2; 4] = [
             self.center + Vec2::new(new_dimensions.x / 2.0, new_dimensions.y / 2.0),
@@ -182,12 +200,14 @@ impl QuadTreeNode {
             Box::new(QuadTreeNode::new(new_dimensions, child_centers[2])),
             Box::new(QuadTreeNode::new(new_dimensions, child_centers[3])),
         ];
-        let new_quadrant: usize = self.get_quadrant(&new_planet.pos);
-        let old_quadrant: usize = self.get_quadrant(&self.planet.pos);
-        children[new_quadrant].add_planet(new_planet);
-        children[old_quadrant].add_planet(&self.planet);
-        self.children = Some(children);
-        self.planet = Planet { pos: Vec2::new(0.0, 0.0), vel: Vec2::new(0.0, 0.0), radius: 0, mass: 0.0, color: "#000000".to_string() };
+        for planet in &self.planets {
+            let quadrant: usize = self.get_quadrant(&planet.pos);
+            children[quadrant].add_planet(planet);
+        }
+        if self.planets.len() != 0 {
+            self.children = Some(children);
+        }
+        self.planets.clear();
     }
 
     fn get_quadrant(&self, position: &Vec2) -> usize {
@@ -197,9 +217,9 @@ impl QuadTreeNode {
         else {3}
     }
     fn update_center_of_mass(&mut self) {
-        if self.has_planet() {
-            self.mass = self.planet.mass;
-            self.center_of_mass = self.planet.pos;
+        if self.planets.len() == 1 {
+            self.mass = self.planets[0].mass;
+            self.center_of_mass = self.planets[0].pos;
         } else {
             if self.children.is_some() {
                 for i in 0..self.children.as_ref().unwrap().len() {
@@ -239,8 +259,7 @@ impl QuadTreeNode {
         while let Some(node) = queue.pop_front() {
             if node.mass == 0.0 {continue};
             let distance: f64 = node.center_of_mass.distance_from(pos);
-            let ratio: f64 = (node.dimensions.x) / distance; // Calculate the ratio
-            // log::info!("Planet Pos: {:#?}, Node COM: {:#?}", pos, node.center_of_mass);
+            let ratio: f64 = f64::max(node.dimensions.x, node.dimensions.y) / distance; // Calculate the ratio
             if ratio < target {
                 values.push(node);
             } else {
@@ -271,42 +290,47 @@ pub struct Universe {
 impl Universe  {
     #[wasm_bindgen(constructor)]
     pub fn new(width: f64, height: f64) -> Universe {
-        panic::set_hook(Box::new(console_error_panic_hook::hook));
-        wasm_logger::init(wasm_logger::Config::default());
-        log::info!("Universe Init!");
-        Universe {planets: Vec::new(), gravity: 6.67e-11, speed: 1.0, mass: 12.0, power: 2, quad_tree: QuadTreeNode::new(Vec2 { x: width, y: height }, Vec2 { x: width/2.0, y: height/2.0 }), theta: 0.7}
+        // panic::set_hook(Box::new(console_error_panic_hook::hook));
+        // wasm_logger::init(wasm_logger::Config::default());
+        // log::info!("Universe Init!");
+        Universe {planets: Vec::new(), gravity: 6.67e-11, speed: 1.0, mass: 12.0, power: 2, quad_tree: QuadTreeNode::new(Vec2 { x: width, y: height }, Vec2 { x: width/2.0, y: height/2.0 }), theta: 0.5}
     }
     pub fn time_step(&mut self, dt: f64) {
+        if self.planets.len() == 0 {return};
         let mut forces: Vec<Vec2> = vec![Vec2::new(0.0, 0.0); self.planets.len()];
-        //let q2 = self.quad_tree.find_quads(0.7, self.planet[0].pos);
-        let mut big_o: i32 = 0;
-        // log::info!("QUADS LEN: {}", q2.len());
+        //let mut big_o: i32 = 0;
         for i in 0..self.planets.len() {
-            let quads = self.quad_tree.find_quads(self.theta, self.planets[i].pos);
-            if quads.len() == 0 {continue};
-            for j in 0..quads.len() {
-                big_o += 1;
-                forces[i] += self.planets[i].force_from(&quads[j], self.gravity, self.power);
+            if self.planets.len() > 500 {
+                let quads = self.quad_tree.find_quads(self.theta, self.planets[i].pos);
+                if quads.len() == 0 {continue};
+                for j in 0..quads.len() {
+                    //big_o += 1;
+                    forces[i] += self.planets[i].force_from_quad(&quads[j], self.gravity, self.power);
+                }
+            } else {
+                for j in 0..self.planets.len() {
+                    //big_o += 1;
+                    forces[i] += self.planets[i].force_from_planet(&self.planets[j], self.gravity, self.power);
+                }
             }
         }
-        log::info!("Big-O: {:#?}", big_o);
+        //log::info!("Big-O: {:#?}", big_o);
         for i in 0..self.planets.len() {
             self.planets[i].move_planet(forces[i], dt * self.speed as f64);
-        } 
-        // log::info!("GOING TO ERROR HERE, planets: {:#?}", self.planet);
-        self.quad_tree.rebuild(&self.planets);
+        }        
+        if self.planets.len() > 500 {self.quad_tree.rebuild(&self.planets);};
+
     }
     pub fn reset(&mut self) {
         *self = Universe::new(self.quad_tree.dimensions.x, self.quad_tree.dimensions.y);
     }
-    pub fn add_planet(&mut self, planet: JsValue) {
-        let planet_t: Planet =  serde_wasm_bindgen::from_value(planet).unwrap();
-        self.planets.push(planet_t);        
-        self.quad_tree.rebuild(&self.planets);
+    pub fn add_planet(&mut self, px: f64, py: f64, vx: f64, vy: f64, radius: i32, mass: f64, color: String) {
+        self.planets.push(Planet::new(px, py, vx, vy, radius, mass, color));        
+        if self.planets.len() > 500 {self.quad_tree.rebuild(&self.planets);};
     }
     pub fn remove_planet(&mut self) {
         self.planets.pop();        
-        self.quad_tree.rebuild(&self.planets);
+        if self.planets.len() > 500 {self.quad_tree.rebuild(&self.planets);};
 
     }
     pub fn get_planets(&self) -> JsValue {
@@ -352,7 +376,8 @@ impl Universe  {
         serde_wasm_bindgen::to_value(&self.quad_tree.dimensions).unwrap()
     }
     pub fn set_dimensions(&mut self, width: f64, height: f64) {
-        self.quad_tree.dimensions = Vec2::new(width, height);
+        self.quad_tree.dimensions.x = width;
+        self.quad_tree.dimensions.y = height;
     }
 }
  

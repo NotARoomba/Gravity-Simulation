@@ -1,7 +1,7 @@
 import { ChangeEvent, useEffect, useState } from "react";
 import { useTick } from '@pixi/react';
 import { Color } from "pixi.js";
-import {Universe, Planet} from "physics-engine/physics_engine"
+import {Universe} from "physics-engine/physics_engine"
 import BatchGraphics from "../utils/BatchGraphics";
 import { SandboxProps, UniverseInfo } from "../utils/Types";
 
@@ -21,9 +21,10 @@ export default function SandBox({width, height, random, randomCount}: SandboxPro
     info = {width, height, randomCount: universe.get_planet_count()}
   }, [width, height]);
   if (random && render == 0) {
+    universe.reset();
     //universe.add_planet(new Planet([props.size[0]/2, props.size[1]/2], [0, 0], 15, 1000, new Color("grey").toHex()).get_data())
     for (let i = 0; i < randomCount; i++) {
-      universe.add_planet(new Planet(Math.random()*width, Math.random()*height,Math.random()-0.5, Math.random()-0.5, 12, 12, new Color(planetColors[Math.floor(planetColors.length * Math.random())]).toHex()).get_data())
+      universe.add_planet(Math.random()*width, Math.random()*height,Math.random()-0.5, Math.random()-0.5, 12, 12, new Color(planetColors[Math.floor(planetColors.length * Math.random())]).toHex())
     }
   }
   return <BatchGraphics planets={universe.get_planets()} quadTree={null} />;
@@ -42,14 +43,14 @@ export function resetSimulation() {
   universe.reset();
   //universe.add_planet(new Planet([nP[0]/2, nP[1]/2], [0, 0], 15, 100000000000000, new Color("grey").toHex()).get_data())
   for (let i = 0; i < info.randomCount; i++) {
-    universe.add_planet(new Planet(Math.random()*info.width, Math.random()*info.height,Math.random()-0.5, Math.random()-0.5, 12, 12, new Color(planetColors[Math.floor(planetColors.length * Math.random())]).toHex()).get_data())
+    universe.add_planet(Math.random()*info.width, Math.random()*info.height,Math.random()-0.5, Math.random()-0.5, 12, 12, new Color(planetColors[Math.floor(planetColors.length * Math.random())]).toHex())
   }
 }
 export function changePlanets(event: ChangeEvent<HTMLInputElement>) {
   let {c, w}: {c: number, w: number} = {c: universe.get_planet_count(), w: parseInt(event.target.value)};
   if (w >= c) {
     for (let i = 0; i < (w-c); i++) {
-      universe.add_planet(new Planet(Math.random()*info.width, Math.random()*info.height,Math.random()-0.5, Math.random()-0.5, 12, universe.get_mass(), new Color(planetColors[Math.floor(planetColors.length * Math.random())]).toHex()).get_data())
+      universe.add_planet(Math.random()*info.width, Math.random()*info.height,Math.random()-0.5, Math.random()-0.5, 12, universe.get_mass(), new Color(planetColors[Math.floor(planetColors.length * Math.random())]).toHex())
     }
   } else {
     for (let i = 0; i < (c-w); i++) {

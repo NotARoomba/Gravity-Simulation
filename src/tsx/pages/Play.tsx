@@ -50,12 +50,15 @@ const Viewport = (props: {width: number, height: number, children: any}) => {
 export default function Play() {
     const [width, height] = useWindowDimension();
     const [pointerDown, setPointerDown] = useState(false);
+    const pointer = (value: boolean) => {
+      setPointerDown(value)
+    }
     console.log(pointerDown)
     return (
         <div className="flex m-0 justify-start">
-        <Stage width={width} height={height} options={{ backgroundColor: 0x000 }} className={"xs:w-[70vw] " + (pointerDown ? "cursor-grabbing" : "cursor-pointer")} onPointerDown={() => setPointerDown(true)} onPointerUp={() => setPointerDown(false)}>
+        <Stage width={width} height={height} options={{ backgroundColor: 0x000 }} className={"xs:w-[70vw] " + (pointerDown ? "cursor-grabbing" : "cursor-pointer")} onPointerDown={() => pointer(true)} onPointerUp={() => pointer(false)}>
             <Viewport width={width} height={height}>
-                <SandBox random={true} randomCount={400} width={width} height={height}/>
+                <SandBox random={true} randomCount={25} width={width} height={height}/>
             </Viewport>
         </Stage>
         <Settings/>
