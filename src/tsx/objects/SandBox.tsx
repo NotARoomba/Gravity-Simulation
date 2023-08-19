@@ -65,3 +65,6 @@ export function changeGravity(event: ChangeEvent<HTMLInputElement>) {
 export function changeTheta(event: ChangeEvent<HTMLInputElement>) {
     universe.set_theta(parseFloat(event.target.value))
 }
+export function numberOfPlanets() {
+  return universe.get_planet_count()
+}

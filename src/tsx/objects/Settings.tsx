@@ -1,15 +1,39 @@
-import { changeSpeed, changeMass, resetSimulation, changePlanets, changeTheta } from "./SandBox"
+import { changeSpeed, changeMass, resetSimulation, changePlanets, changeTheta, numberOfPlanets } from "./SandBox"
 import { useState } from "react";
 import { AnimatePresence } from "framer-motion";
+import { useSwipeable } from "react-swipeable";
+import SwipeableViews from 'react-swipeable-views';
+import Slider from "./Slider";
 
 export default function Settings() {
     // TODO: have settings to set the current number of planets to have random masses and sizes
     // TODO: toggle quadtree visibility and add and remove theta when needed
     const [isOpen, setIsOpen] = useState(true);
+    const handlers = useSwipeable({
+        onSwiped: (eventData) => {
+            console.log(eventData)
+            if (eventData.dir == "Up" && !isOpen) {
+                setIsOpen(!isOpen)
+            }
+            if (eventData.dir == "Down" && isOpen) {
+                setIsOpen(!isOpen)
+            }
+        },
+        ...{trackMouse: true, swipeDuration: 200},
+      });
     return (
     <AnimatePresence>
-        <div className={"absolute flex flex-col text-neutral-300 bg-neutral-900 w-screen h-32" + (isOpen?" bottom-0":" bottom-[-18vw]")}>
-            <p className="flex text-xl text-center justify-center">Settings</p>
+        <div {...handlers} className={"absolute flex flex-col text-neutral-300 bg-neutral-900 w-screen pt-12 rounded-t-xl" + (isOpen?" bottom-0":" -bottom-24")}>
+            <div className="w-full bg-neutral-900 h-6 -translate-y-12 rounded-t-full">
+                <hr className="absolute justify-center w-3/6 left-1/2 -translate-x-1/2 translate-y-4 border-2 rounded mx-auto px-24"></hr>
+                <p className="flex text-3xl font-bold text-center justify-center pt-8">Settings</p>
+            </div>
+            <div className={"align-middle overflow-scroll py-4 h-24 snap-y snap-mandatory"}>
+               <Slider min={-10} max={10} step={0.1} defaultValue={1} title="Simulation Speed" func={changeSpeed} />
+               <Slider min={1} max={1000} step={1} defaultValue={250} title="Number of Planets" func={changePlanets} />
+               <Slider min={1} max={1000} step={1} defaultValue={12} title="Planet Mass" func={changeMass} />
+               {numberOfPlanets() > 500?<Slider min={0.1} max={3} step={0.1} defaultValue={0.7} title="Theta" func={changeTheta} /> : <></>}
+            </div>
             </div></AnimatePresence>)
 }
 

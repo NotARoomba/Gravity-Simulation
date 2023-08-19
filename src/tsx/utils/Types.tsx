@@ -1,4 +1,5 @@
 import { Vec2 } from "physics-engine";
+import { ChangeEvent } from "react";
 
 export interface SandboxProps {
     random: boolean;
@@ -34,6 +35,15 @@ export interface QuadTreeProps {
     dimensions: Vec2;
     children: Array<QuadTreeProps>;
     planets: Array<PlanetProps>
+}
+
+export interface SliderProps {
+    min: number;
+    max: number;
+    step: number;
+    title: string;
+    defaultValue: number;
+    func: (event: ChangeEvent<HTMLInputElement>) => void;
 }
 
 export interface UniverseProp {
