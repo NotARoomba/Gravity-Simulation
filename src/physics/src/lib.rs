@@ -285,6 +285,7 @@ pub struct Universe {
     power: i32,
     quad_tree: QuadTreeNode,
     theta: f64,
+    max_native: usize,
 }
 #[wasm_bindgen]
 impl Universe  {
@@ -293,14 +294,14 @@ impl Universe  {
         // panic::set_hook(Box::new(console_error_panic_hook::hook));
         // wasm_logger::init(wasm_logger::Config::default());
         // log::info!("Universe Init!");
-        Universe {planets: Vec::new(), gravity: 6.67e-11, speed: 1.0, mass: 12.0, power: 2, quad_tree: QuadTreeNode::new(Vec2 { x: width, y: height }, Vec2 { x: width/2.0, y: height/2.0 }), theta: 0.5}
+        Universe {planets: Vec::new(), gravity: 6.67e-11, speed: 1.0, mass: 12.0, power: 2, quad_tree: QuadTreeNode::new(Vec2 { x: width, y: height }, Vec2 { x: width/2.0, y: height/2.0 }), theta: 0.5, max_native: 500}
     }
     pub fn time_step(&mut self, dt: f64) {
         if self.planets.len() == 0 {return};
         let mut forces: Vec<Vec2> = vec![Vec2::new(0.0, 0.0); self.planets.len()];
         //let mut big_o: i32 = 0;
         for i in 0..self.planets.len() {
-            if self.planets.len() > 500 {
+            if self.planets.len() > self.max_native {
                 let quads = self.quad_tree.find_quads(self.theta, self.planets[i].pos);
                 if quads.len() == 0 {continue};
                 for j in 0..quads.len() {
@@ -318,20 +319,20 @@ impl Universe  {
         for i in 0..self.planets.len() {
             self.planets[i].move_planet(forces[i], dt * self.speed as f64);
         }        
-        if self.planets.len() > 500 {self.quad_tree.rebuild(&self.planets);};
+        if self.planets.len() > self.max_native {self.quad_tree.rebuild(&self.planets);};
 
     }
     pub fn reset(&mut self) {
         *self = Universe::new(self.quad_tree.dimensions.x, self.quad_tree.dimensions.y);
     }
     pub fn add_planet(&mut self, px: f64, py: f64, vx: f64, vy: f64, radius: i32, mass: f64, color: String) {
-        self.planets.push(Planet::new(px, py, vx, vy, radius, mass, color));        
-        if self.planets.len() > 500 {self.quad_tree.rebuild(&self.planets);};
+        self.planets.push(Planet::new(px, py, vx, vy, radius, mass, color));
     }
     pub fn remove_planet(&mut self) {
-        self.planets.pop();        
-        if self.planets.len() > 500 {self.quad_tree.rebuild(&self.planets);};
-
+        self.planets.pop();
+    }
+    pub fn rebuild(&mut self) {
+        if self.planets.len() > self.max_native {self.quad_tree.rebuild(&self.planets);};
     }
     pub fn get_planets(&self) -> JsValue {
         serde_wasm_bindgen::to_value(&self.planets).unwrap()

@@ -57,7 +57,7 @@ export default function Play() {
         <div className="flex m-0 justify-start">
         <Stage width={width} height={height} options={{ backgroundColor: 0x000 }} className={"xs:w-[70vw] " + (pointerDown ? "cursor-grabbing" : "cursor-pointer")} onPointerDown={() => pointer(true)} onPointerUp={() => pointer(false)}>
             <Viewport width={width} height={height}>
-                <SandBox random={true} randomCount={250} width={width} height={height}/>
+                <SandBox random={true} count={250} width={width} height={height}/>
             </Viewport>
         </Stage>
         <Settings/>

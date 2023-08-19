@@ -4,7 +4,7 @@ export interface SandboxProps {
     random: boolean;
     width: number;
     height: number;
-    randomCount: number;
+    count: number;
 }
 export interface BatchGraphicsProps {
     planets: Array<PlanetProps>;
@@ -15,7 +15,9 @@ export interface BatchGraphicsProps {
 export interface UniverseInfo {
     width: number;
     height: number;    
-    randomCount: number;
+    count: number;
+    random: boolean;
+    qtv: boolean;
 }
 
 export interface PlanetProps {

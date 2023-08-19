@@ -8,7 +8,7 @@ export default function Error() {
   return (
     <div>
       <Stage width={width} height={height} options={{ backgroundColor: 0x000 }} className="canvas">
-        <SandBox random={true} randomCount={25} width={width} height={height}/>
+        <SandBox random={true} count={25} width={width} height={height}/>
         </Stage>
         <div className="fixed -translate-x-1/2 -translate-y-1/3 left-1/2 top-1/3">
           <h1 className='text-9xl font-semibold mb-12'>404</h1>
