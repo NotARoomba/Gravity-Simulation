@@ -46,6 +46,30 @@ export interface SliderProps {
     func: (event: ChangeEvent<HTMLInputElement>) => void;
 }
 
+export interface ButtonProps {
+    text: string;
+    func: () => void;
+}
+
+export const bgColors = [
+'bg-light-cyan',
+'bg-salmon',
+'bg-medium-blue',
+'bg-teal',
+'bg-orange-orange',
+'bg-really-red'];
+
+export const accentColors = [
+    'accent-dark-blue',
+        'accent-light-cyan',
+        'accent-yellow-orange',
+        'accent-salmon',
+        'accent-medium-blue',
+        'accent-teal',
+        'accent-darkish-yellow',
+        'accent-orange-orange',
+        'accent-really-red',];
+
 export interface UniverseProp {
     time_step: (dt:number) => void;
     reset: () => void;

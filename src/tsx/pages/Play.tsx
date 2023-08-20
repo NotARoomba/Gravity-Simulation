@@ -5,6 +5,7 @@ import SandBox from "../objects/SandBox"
 import Settings from "../objects/Settings"
 import { useWindowDimension } from "../utils/useWindowDimension";
 import { useState } from 'react';
+import Transitions from '../utils/Transitions';
 
 
 
@@ -54,13 +55,15 @@ export default function Play() {
       setPointerDown(value)
     }
     return (
+      <Transitions>
         <div className="flex m-0 justify-start">
         <Stage width={width} height={height} options={{ backgroundColor: 0x000 }} className={"xs:w-[70vw] " + (pointerDown ? "cursor-grabbing" : "cursor-pointer")} onPointerDown={() => pointer(true)} onPointerUp={() => pointer(false)}>
             <Viewport width={width} height={height}>
-                <SandBox random={true} count={250} width={width} height={height}/>
+                <SandBox random={false} count={250} width={width} height={height}/>
             </Viewport>
         </Stage>
         <Settings/>
         </div>
+        </Transitions>
     )
 }

@@ -5,11 +5,10 @@ import { Color } from "pixi.js";
 import {Universe} from "physics-engine/physics_engine"
 import BatchGraphics from "../utils/BatchGraphics";
 import { SandboxProps, UniverseInfo } from "../utils/Types";
-
 const universe: Universe = new Universe(0, 0);
 let info: UniverseInfo;
 
-const planetColors = ["#264653", "2A9D8F", "#F4A261", "E76F51", "#277da1", "#43aa8b", "#E9C46A", "#f8961e", "f94144"]
+const planetColors = ["#264653", "#2A9D8F", "#F4A261", "#E76F51", "#277da1", "#43aa8b", "#E9C46A", "#f8961e", "#f94144"]
 
 export default function SandBox({width, height, random, count}: SandboxProps) {
   const [render, setRender] = useState(0);
@@ -20,17 +19,15 @@ export default function SandBox({width, height, random, count}: SandboxProps) {
   useEffect(() => {
     universe.set_dimensions(width, height);
     info = {width, height, count, random, qtv: false}
-  }, [width, height, count, random]);
-  if (render == 1) {
     universe.reset();
     //universe.add_planet(new Planet([props.size[0]/2, props.size[1]/2], [0, 0], 15, 1000, new Color("grey").toHex()).get_data())
     for (let i = 0; i < count; i++) {
       universe.add_planet(Math.random()*width, Math.random()*height,Math.random()-0.5, Math.random()-0.5, info.random?(Math.random()*12)+1:12, info.random?Math.random()*1000:universe.get_mass(), new Color(planetColors[Math.floor(planetColors.length * Math.random())]).toHex())
     }
     universe.rebuild()
-  }
+  }, [width, height, count, random]);
 
-  return <BatchGraphics planets={universe.get_planets()} quadTree={null} />;
+  return <BatchGraphics planets={universe.get_planets()} quadTree={info?.qtv? universe.get_quad_tree() : null} />;
 }
 export function changeSpeed(event: ChangeEvent<HTMLInputElement>) {
     universe.set_speed(parseFloat(event.target.value))
@@ -58,6 +55,7 @@ export function changePlanets(event: ChangeEvent<HTMLInputElement>) {
     }
   }
   universe.rebuild()
+  return w;
 }
 export function changeGravity(event: ChangeEvent<HTMLInputElement>) {
     universe.set_gravity(parseFloat(event.target.value))
@@ -65,6 +63,14 @@ export function changeGravity(event: ChangeEvent<HTMLInputElement>) {
 export function changeTheta(event: ChangeEvent<HTMLInputElement>) {
     universe.set_theta(parseFloat(event.target.value))
 }
-export function numberOfPlanets() {
-  return universe.get_planet_count()
+export function toggleQuadTree() {
+  info.qtv = !info.qtv;
+}
+export function toggleRandom() {
+  info.random = !info.random;
+  resetSimulation()
+  return info.random
+}
+export function getPlanetCount() {
+  return universe.get_planet_count();
 }

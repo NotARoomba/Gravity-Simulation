@@ -1,17 +1,17 @@
-import { changeSpeed, changeMass, resetSimulation, changePlanets, changeTheta, numberOfPlanets } from "./SandBox"
+import { changeSpeed, changeMass, resetSimulation, changePlanets, changeTheta, toggleQuadTree, toggleRandom, getPlanetCount } from "./SandBox"
 import { useState } from "react";
-import { AnimatePresence } from "framer-motion";
 import { useSwipeable } from "react-swipeable";
-import SwipeableViews from 'react-swipeable-views';
 import Slider from "./Slider";
-
+import Button from "./Button";
 export default function Settings() {
     // TODO: have settings to set the current number of planets to have random masses and sizes
     // TODO: toggle quadtree visibility and add and remove theta when needed
-    const [isOpen, setIsOpen] = useState(true);
+    const [isOpen, setIsOpen] = useState(false);
+    const [planetSize, setPlanetSize] = useState(0);
+    const [isRandom, setIsRandom] = useState(false)
+    const [reset, setReset] = useState(0);
     const handlers = useSwipeable({
         onSwiped: (eventData) => {
-            console.log(eventData)
             if (eventData.dir == "Up" && !isOpen) {
                 setIsOpen(!isOpen)
             }
@@ -19,22 +19,28 @@ export default function Settings() {
                 setIsOpen(!isOpen)
             }
         },
-        ...{trackMouse: true, swipeDuration: 200},
+        ...{trackMouse: true},
       });
     return (
-    <AnimatePresence>
-        <div {...handlers} className={"absolute flex flex-col text-neutral-300 bg-neutral-900 w-screen pt-12 rounded-t-xl" + (isOpen?" bottom-0":" -bottom-24")}>
-            <div className="w-full bg-neutral-900 h-6 -translate-y-12 rounded-t-full">
+        <div className={"absolute flex flex-col text-neutral-300 bg-neutral-900 w-screen pt-12 rounded-t-xl md:w-11/12 left-1/2 -translate-x-1/2" + (isOpen?" bottom-0":" -bottom-32")}>
+            <div {...handlers} className="w-full bg-neutral-900 h-6 -translate-y-12 rounded-t-full">
                 <hr className="absolute justify-center w-3/6 left-1/2 -translate-x-1/2 translate-y-4 border-2 rounded mx-auto px-24"></hr>
-                <p className="flex text-3xl font-bold text-center justify-center pt-8">Settings</p>
+                <p className="flex text-3xl font-bold text-center justify-center pt-8 hover:animate-pulse hover:cursor-pointer" onClick={() => setIsOpen(!isOpen)}>Settings</p>
             </div>
-            <div className={"align-middle overflow-scroll py-4 h-24 snap-y snap-mandatory"}>
-               <Slider min={-10} max={10} step={0.1} defaultValue={1} title="Simulation Speed" func={changeSpeed} />
-               <Slider min={1} max={1000} step={1} defaultValue={250} title="Number of Planets" func={changePlanets} />
-               <Slider min={1} max={1000} step={1} defaultValue={12} title="Planet Mass" func={changeMass} />
-               {numberOfPlanets() > 500?<Slider min={0.1} max={3} step={0.1} defaultValue={0.7} title="Theta" func={changeTheta} /> : <></>}
+            <div className={"align-middle overflow-y-scroll py-4 h-36"}>
+               <Slider key={reset+1+(isRandom?1:2)} min={-10} max={10} step={0.1} defaultValue={1} title="Simulation Speed" func={changeSpeed} />
+               <Slider key={reset+9+(isRandom?1:2)} min={1} max={1000} step={1} defaultValue={250} title="Number of Planets" func={(e) => setPlanetSize(changePlanets(e))} />
+               <Slider key={reset+3+(isRandom?1:2)} min={1} max={1000} step={1} defaultValue={12} title="Planet Mass" func={changeMass} />
+               {planetSize > 500?<Slider key={reset+4+(isRandom?1:2)} min={0.1} max={3} step={0.1} defaultValue={0.7} title="Theta" func={changeTheta} /> : <></>}
+               <div className="flex flex-wrap justify-center">
+                {planetSize > 500?<Button text={"Toggle QuadTree"} func={toggleQuadTree} /> : <></>}
+                <Button text={isRandom ? "De-Randomize" : "Randomize"} func={() => {setIsRandom(toggleRandom());setPlanetSize(getPlanetCount())}} />
+                <Button text={"Reset Simulation"} func={() => {resetSimulation();setReset(reset+1);}} />
+                <Button text={"Hard Reset"} func={() => window.location.reload()} />
+
+               </div>
             </div>
-            </div></AnimatePresence>)
+            </div>)
 }
 
 
