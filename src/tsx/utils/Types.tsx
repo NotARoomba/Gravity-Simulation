@@ -70,6 +70,16 @@ export const accentColors = [
   "accent-really-red",
 ];
 
+export const textColors = [
+  "text-light-cyan",
+  "text-yellow-orange",
+  "text-salmon",
+  "text-medium-blue",
+  "text-teal",
+  "text-darkish-yellow",
+  "text-orange-orange",
+];
+
 export interface UniverseProp {
   time_step: (dt: number) => void;
   reset: () => void;

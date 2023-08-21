@@ -33,7 +33,7 @@ export default function Settings() {
   return (
     <div
       className={
-        "absolute flex flex-col text-neutral-300 bg-neutral-900 w-screen pt-12 rounded-t-xl md:w-11/12 left-1/2 -translate-x-1/2" +
+        "absolute flex flex-col text-neutral-300 bg-neutral-900 w-screen pt-12 rounded-t-xl" +
         (isOpen ? " bottom-0" : " -bottom-32")
       }
     >
