@@ -22,7 +22,7 @@
 An interactive N-body gravity simulation that combines a high-performance physics engine (written in Rust and compiled to WASM) with a responsive web UI (React + TypeScript), and PixiJS for high-performance 2D canvas rendering.
 
 <p align="center">
-  <a href="https://gravitron.notaroomba.dev">Live demo · gravitron.notaroomba.dev</a>
+  <a href="https://gravity.notaroomba.dev">Live demo · gravity.notaroomba.dev</a>
 </p>
 
 ## Key features
